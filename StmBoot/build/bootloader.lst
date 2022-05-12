@@ -1,0 +1,1384 @@
+ARM GAS  C:\Users\worker\AppData\Local\Temp\ccRQJmts.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"bootloader.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.bss.TimingDelay,"aw",%nobits
+  18              		.align	2
+  21              	TimingDelay:
+  22 0000 00000000 		.space	4
+  23              		.global	state
+  24              		.section	.bss.state,"aw",%nobits
+  27              	state:
+  28 0000 00       		.space	1
+  29              		.section	.text.Crc8,"ax",%progbits
+  30              		.align	1
+  31              		.global	Crc8
+  32              		.arch armv7e-m
+  33              		.syntax unified
+  34              		.thumb
+  35              		.thumb_func
+  36              		.fpu fpv4-sp-d16
+  38              	Crc8:
+  39              	.LFB126:
+  40              		.file 1 "Core/Src/bootloader.c"
+   1:Core/Src/bootloader.c **** #include "bootloader.h"
+   2:Core/Src/bootloader.c **** 
+   3:Core/Src/bootloader.c **** Boot_state_t state= NOT_OPERATION;
+   4:Core/Src/bootloader.c **** 
+   5:Core/Src/bootloader.c **** uint8_t Crc8(uint8_t *pcBlock, uint8_t len)
+   6:Core/Src/bootloader.c **** {
+  41              		.loc 1 6 1
+  42              		.cfi_startproc
+  43              		@ args = 0, pretend = 0, frame = 16
+  44              		@ frame_needed = 1, uses_anonymous_args = 0
+  45              		@ link register save eliminated.
+  46 0000 80B4     		push	{r7}
+  47              	.LCFI0:
+  48              		.cfi_def_cfa_offset 4
+  49              		.cfi_offset 7, -4
+  50 0002 85B0     		sub	sp, sp, #20
+  51              	.LCFI1:
+  52              		.cfi_def_cfa_offset 24
+  53 0004 00AF     		add	r7, sp, #0
+  54              	.LCFI2:
+  55              		.cfi_def_cfa_register 7
+  56 0006 7860     		str	r0, [r7, #4]
+ARM GAS  C:\Users\worker\AppData\Local\Temp\ccRQJmts.s 			page 2
+
+
+  57 0008 0B46     		mov	r3, r1
+  58 000a FB70     		strb	r3, [r7, #3]
+   7:Core/Src/bootloader.c ****     uint8_t crc = 0xFF;
+  59              		.loc 1 7 13
+  60 000c FF23     		movs	r3, #255
+  61 000e FB73     		strb	r3, [r7, #15]
+   8:Core/Src/bootloader.c ****     uint8_t i;
+   9:Core/Src/bootloader.c ****     while (len--)
+  62              		.loc 1 9 11
+  63 0010 1FE0     		b	.L2
+  64              	.L7:
+  10:Core/Src/bootloader.c ****     {
+  11:Core/Src/bootloader.c ****         crc ^= *pcBlock++;
+  65              		.loc 1 11 24
+  66 0012 7B68     		ldr	r3, [r7, #4]
+  67 0014 5A1C     		adds	r2, r3, #1
+  68 0016 7A60     		str	r2, [r7, #4]
+  69              		.loc 1 11 16
+  70 0018 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+  71              		.loc 1 11 13
+  72 001a FB7B     		ldrb	r3, [r7, #15]
+  73 001c 5340     		eors	r3, r3, r2
+  74 001e FB73     		strb	r3, [r7, #15]
+  12:Core/Src/bootloader.c **** 
+  13:Core/Src/bootloader.c ****         for (i = 0; i < 8; i++)
+  75              		.loc 1 13 16
+  76 0020 0023     		movs	r3, #0
+  77 0022 BB73     		strb	r3, [r7, #14]
+  78              		.loc 1 13 9
+  79 0024 12E0     		b	.L3
+  80              	.L6:
+  14:Core/Src/bootloader.c ****             crc = crc & 0x80 ? (crc << 1) ^ 0x31 : crc << 1;
+  81              		.loc 1 14 30
+  82 0026 97F90F30 		ldrsb	r3, [r7, #15]
+  83              		.loc 1 14 17
+  84 002a 002B     		cmp	r3, #0
+  85 002c 07DA     		bge	.L4
+  86              		.loc 1 14 37 discriminator 1
+  87 002e FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+  88 0030 5B00     		lsls	r3, r3, #1
+  89              		.loc 1 14 43 discriminator 1
+  90 0032 5BB2     		sxtb	r3, r3
+  91 0034 83F03103 		eor	r3, r3, #49
+  92 0038 5BB2     		sxtb	r3, r3
+  93              		.loc 1 14 17 discriminator 1
+  94 003a DBB2     		uxtb	r3, r3
+  95 003c 02E0     		b	.L5
+  96              	.L4:
+  97              		.loc 1 14 17 is_stmt 0 discriminator 2
+  98 003e FB7B     		ldrb	r3, [r7, #15]
+  99 0040 5B00     		lsls	r3, r3, #1
+ 100 0042 DBB2     		uxtb	r3, r3
+ 101              	.L5:
+ 102              		.loc 1 14 17 discriminator 4
+ 103 0044 FB73     		strb	r3, [r7, #15]
+  13:Core/Src/bootloader.c ****             crc = crc & 0x80 ? (crc << 1) ^ 0x31 : crc << 1;
+ 104              		.loc 1 13 29 is_stmt 1 discriminator 4
+ARM GAS  C:\Users\worker\AppData\Local\Temp\ccRQJmts.s 			page 3
+
+
+ 105 0046 BB7B     		ldrb	r3, [r7, #14]	@ zero_extendqisi2
+ 106 0048 0133     		adds	r3, r3, #1
+ 107 004a BB73     		strb	r3, [r7, #14]
+ 108              	.L3:
+  13:Core/Src/bootloader.c ****             crc = crc & 0x80 ? (crc << 1) ^ 0x31 : crc << 1;
+ 109              		.loc 1 13 9 discriminator 2
+ 110 004c BB7B     		ldrb	r3, [r7, #14]	@ zero_extendqisi2
+ 111 004e 072B     		cmp	r3, #7
+ 112 0050 E9D9     		bls	.L6
+ 113              	.L2:
+   9:Core/Src/bootloader.c ****     {
+ 114              		.loc 1 9 15
+ 115 0052 FB78     		ldrb	r3, [r7, #3]	@ zero_extendqisi2
+ 116 0054 5A1E     		subs	r2, r3, #1
+ 117 0056 FA70     		strb	r2, [r7, #3]
+   9:Core/Src/bootloader.c ****     {
+ 118              		.loc 1 9 11
+ 119 0058 002B     		cmp	r3, #0
+ 120 005a DAD1     		bne	.L7
+  15:Core/Src/bootloader.c ****     }
+  16:Core/Src/bootloader.c ****     return crc;
+ 121              		.loc 1 16 12
+ 122 005c FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+  17:Core/Src/bootloader.c **** }
+ 123              		.loc 1 17 1
+ 124 005e 1846     		mov	r0, r3
+ 125 0060 1437     		adds	r7, r7, #20
+ 126              	.LCFI3:
+ 127              		.cfi_def_cfa_offset 4
+ 128 0062 BD46     		mov	sp, r7
+ 129              	.LCFI4:
+ 130              		.cfi_def_cfa_register 13
+ 131              		@ sp needed
+ 132 0064 5DF8047B 		ldr	r7, [sp], #4
+ 133              	.LCFI5:
+ 134              		.cfi_restore 7
+ 135              		.cfi_def_cfa_offset 0
+ 136 0068 7047     		bx	lr
+ 137              		.cfi_endproc
+ 138              	.LFE126:
+ 140              		.section	.text.jumpToMainApp,"ax",%progbits
+ 141              		.align	1
+ 142              		.global	jumpToMainApp
+ 143              		.syntax unified
+ 144              		.thumb
+ 145              		.thumb_func
+ 146              		.fpu fpv4-sp-d16
+ 148              	jumpToMainApp:
+ 149              	.LFB127:
+  18:Core/Src/bootloader.c **** 
+  19:Core/Src/bootloader.c **** void jumpToMainApp(void)
+  20:Core/Src/bootloader.c **** {
+ 150              		.loc 1 20 1
+ 151              		.cfi_startproc
+ 152              		@ args = 0, pretend = 0, frame = 16
+ 153              		@ frame_needed = 1, uses_anonymous_args = 0
+ 154 0000 80B5     		push	{r7, lr}
+ARM GAS  C:\Users\worker\AppData\Local\Temp\ccRQJmts.s 			page 4
+
+
+ 155              	.LCFI6:
+ 156              		.cfi_def_cfa_offset 8
+ 157              		.cfi_offset 7, -8
+ 158              		.cfi_offset 14, -4
+ 159 0002 84B0     		sub	sp, sp, #16
+ 160              	.LCFI7:
+ 161              		.cfi_def_cfa_offset 24
+ 162 0004 00AF     		add	r7, sp, #0
+ 163              	.LCFI8:
+ 164              		.cfi_def_cfa_register 7
+  21:Core/Src/bootloader.c **** 	uint32_t app_jump_address;
+  22:Core/Src/bootloader.c **** 	typedef void(*pFunction)(void);
+  23:Core/Src/bootloader.c **** 	pFunction Jump_To_Application;
+  24:Core/Src/bootloader.c **** 	//Сброс периферии
+  25:Core/Src/bootloader.c **** 	RCC->APB1RSTR = 0xFFFFFFFF;
+ 165              		.loc 1 25 5
+ 166 0006 154B     		ldr	r3, .L10
+ 167              		.loc 1 25 16
+ 168 0008 4FF0FF32 		mov	r2, #-1
+ 169 000c 1A61     		str	r2, [r3, #16]
+  26:Core/Src/bootloader.c **** 	RCC->APB1RSTR = 0x0; 
+ 170              		.loc 1 26 5
+ 171 000e 134B     		ldr	r3, .L10
+ 172              		.loc 1 26 16
+ 173 0010 0022     		movs	r2, #0
+ 174 0012 1A61     		str	r2, [r3, #16]
+  27:Core/Src/bootloader.c **** 	RCC->APB2RSTR = 0xFFFFFFFF;
+ 175              		.loc 1 27 5
+ 176 0014 114B     		ldr	r3, .L10
+ 177              		.loc 1 27 16
+ 178 0016 4FF0FF32 		mov	r2, #-1
+ 179 001a DA60     		str	r2, [r3, #12]
+  28:Core/Src/bootloader.c **** 	RCC->APB2RSTR = 0x0; 
+ 180              		.loc 1 28 5
+ 181 001c 0F4B     		ldr	r3, .L10
+ 182              		.loc 1 28 16
+ 183 001e 0022     		movs	r2, #0
+ 184 0020 DA60     		str	r2, [r3, #12]
+  29:Core/Src/bootloader.c **** 	RCC->APB1ENR = 0x0;
+ 185              		.loc 1 29 5
+ 186 0022 0E4B     		ldr	r3, .L10
+ 187              		.loc 1 29 15
+ 188 0024 0022     		movs	r2, #0
+ 189 0026 DA61     		str	r2, [r3, #28]
+  30:Core/Src/bootloader.c **** 	RCC->APB2ENR = 0x0;
+ 190              		.loc 1 30 5
+ 191 0028 0C4B     		ldr	r3, .L10
+ 192              		.loc 1 30 15
+ 193 002a 0022     		movs	r2, #0
+ 194 002c 9A61     		str	r2, [r3, #24]
+  31:Core/Src/bootloader.c **** 	RCC->AHBENR = 0x0;
+ 195              		.loc 1 31 5
+ 196 002e 0B4B     		ldr	r3, .L10
+ 197              		.loc 1 31 14
+ 198 0030 0022     		movs	r2, #0
+ 199 0032 5A61     		str	r2, [r3, #20]
+ 200              	.LBB6:
+ARM GAS  C:\Users\worker\AppData\Local\Temp\ccRQJmts.s 			page 5
+
+
+ 201              	.LBB7:
+ 202              		.file 2 "Drivers/CMSIS/Include/cmsis_gcc.h"
+   1:Drivers/CMSIS/Include/cmsis_gcc.h **** /**************************************************************************//**
+   2:Drivers/CMSIS/Include/cmsis_gcc.h ****  * @file     cmsis_gcc.h
+   3:Drivers/CMSIS/Include/cmsis_gcc.h ****  * @brief    CMSIS compiler GCC header file
+   4:Drivers/CMSIS/Include/cmsis_gcc.h ****  * @version  V5.0.4
+   5:Drivers/CMSIS/Include/cmsis_gcc.h ****  * @date     09. April 2018
+   6:Drivers/CMSIS/Include/cmsis_gcc.h ****  ******************************************************************************/
+   7:Drivers/CMSIS/Include/cmsis_gcc.h **** /*
+   8:Drivers/CMSIS/Include/cmsis_gcc.h ****  * Copyright (c) 2009-2018 Arm Limited. All rights reserved.
+   9:Drivers/CMSIS/Include/cmsis_gcc.h ****  *
+  10:Drivers/CMSIS/Include/cmsis_gcc.h ****  * SPDX-License-Identifier: Apache-2.0
+  11:Drivers/CMSIS/Include/cmsis_gcc.h ****  *
+  12:Drivers/CMSIS/Include/cmsis_gcc.h ****  * Licensed under the Apache License, Version 2.0 (the License); you may
+  13:Drivers/CMSIS/Include/cmsis_gcc.h ****  * not use this file except in compliance with the License.
+  14:Drivers/CMSIS/Include/cmsis_gcc.h ****  * You may obtain a copy of the License at
+  15:Drivers/CMSIS/Include/cmsis_gcc.h ****  *
+  16:Drivers/CMSIS/Include/cmsis_gcc.h ****  * www.apache.org/licenses/LICENSE-2.0
+  17:Drivers/CMSIS/Include/cmsis_gcc.h ****  *
+  18:Drivers/CMSIS/Include/cmsis_gcc.h ****  * Unless required by applicable law or agreed to in writing, software
+  19:Drivers/CMSIS/Include/cmsis_gcc.h ****  * distributed under the License is distributed on an AS IS BASIS, WITHOUT
+  20:Drivers/CMSIS/Include/cmsis_gcc.h ****  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  21:Drivers/CMSIS/Include/cmsis_gcc.h ****  * See the License for the specific language governing permissions and
+  22:Drivers/CMSIS/Include/cmsis_gcc.h ****  * limitations under the License.
+  23:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+  24:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+  25:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef __CMSIS_GCC_H
+  26:Drivers/CMSIS/Include/cmsis_gcc.h **** #define __CMSIS_GCC_H
+  27:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+  28:Drivers/CMSIS/Include/cmsis_gcc.h **** /* ignore some GCC warnings */
+  29:Drivers/CMSIS/Include/cmsis_gcc.h **** #pragma GCC diagnostic push
+  30:Drivers/CMSIS/Include/cmsis_gcc.h **** #pragma GCC diagnostic ignored "-Wsign-conversion"
+  31:Drivers/CMSIS/Include/cmsis_gcc.h **** #pragma GCC diagnostic ignored "-Wconversion"
+  32:Drivers/CMSIS/Include/cmsis_gcc.h **** #pragma GCC diagnostic ignored "-Wunused-parameter"
+  33:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+  34:Drivers/CMSIS/Include/cmsis_gcc.h **** /* Fallback for __has_builtin */
+  35:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef __has_builtin
+  36:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __has_builtin(x) (0)
+  37:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  38:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+  39:Drivers/CMSIS/Include/cmsis_gcc.h **** /* CMSIS compiler specific defines */
+  40:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __ASM
+  41:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __ASM                                  __asm
+  42:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  43:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __INLINE
+  44:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __INLINE                               inline
+  45:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  46:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __STATIC_INLINE
+  47:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __STATIC_INLINE                        static inline
+  48:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  49:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __STATIC_FORCEINLINE                 
+  50:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __STATIC_FORCEINLINE                   __attribute__((always_inline)) static inline
+  51:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif                                           
+  52:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __NO_RETURN
+  53:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __NO_RETURN                            __attribute__((__noreturn__))
+  54:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  55:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __USED
+ARM GAS  C:\Users\worker\AppData\Local\Temp\ccRQJmts.s 			page 6
+
+
+  56:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __USED                                 __attribute__((used))
+  57:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  58:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __WEAK
+  59:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __WEAK                                 __attribute__((weak))
+  60:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  61:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __PACKED
+  62:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __PACKED                               __attribute__((packed, aligned(1)))
+  63:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  64:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __PACKED_STRUCT
+  65:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __PACKED_STRUCT                        struct __attribute__((packed, aligned(1)))
+  66:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  67:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __PACKED_UNION
+  68:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __PACKED_UNION                         union __attribute__((packed, aligned(1)))
+  69:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  70:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT32        /* deprecated */
+  71:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
+  72:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+  73:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+  74:Drivers/CMSIS/Include/cmsis_gcc.h ****   struct __attribute__((packed)) T_UINT32 { uint32_t v; };
+  75:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
+  76:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT32(x)                  (((struct T_UINT32 *)(x))->v)
+  77:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  78:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT16_WRITE
+  79:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
+  80:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+  81:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+  82:Drivers/CMSIS/Include/cmsis_gcc.h ****   __PACKED_STRUCT T_UINT16_WRITE { uint16_t v; };
+  83:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
+  84:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT16_WRITE(addr, val)    (void)((((struct T_UINT16_WRITE *)(void *)(addr))-
+  85:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  86:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT16_READ
+  87:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
+  88:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+  89:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+  90:Drivers/CMSIS/Include/cmsis_gcc.h ****   __PACKED_STRUCT T_UINT16_READ { uint16_t v; };
+  91:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
+  92:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT16_READ(addr)          (((const struct T_UINT16_READ *)(const void *)(add
+  93:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  94:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT32_WRITE
+  95:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
+  96:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+  97:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+  98:Drivers/CMSIS/Include/cmsis_gcc.h ****   __PACKED_STRUCT T_UINT32_WRITE { uint32_t v; };
+  99:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
+ 100:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT32_WRITE(addr, val)    (void)((((struct T_UINT32_WRITE *)(void *)(addr))-
+ 101:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 102:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT32_READ
+ 103:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
+ 104:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+ 105:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+ 106:Drivers/CMSIS/Include/cmsis_gcc.h ****   __PACKED_STRUCT T_UINT32_READ { uint32_t v; };
+ 107:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
+ 108:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT32_READ(addr)          (((const struct T_UINT32_READ *)(const void *)(add
+ 109:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 110:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __ALIGNED
+ 111:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __ALIGNED(x)                           __attribute__((aligned(x)))
+ 112:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ARM GAS  C:\Users\worker\AppData\Local\Temp\ccRQJmts.s 			page 7
+
+
+ 113:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __RESTRICT
+ 114:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __RESTRICT                             __restrict
+ 115:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 116:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 117:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 118:Drivers/CMSIS/Include/cmsis_gcc.h **** /* ###########################  Core Function Access  ########################### */
+ 119:Drivers/CMSIS/Include/cmsis_gcc.h **** /** \ingroup  CMSIS_Core_FunctionInterface
+ 120:Drivers/CMSIS/Include/cmsis_gcc.h ****     \defgroup CMSIS_Core_RegAccFunctions CMSIS Core Register Access Functions
+ 121:Drivers/CMSIS/Include/cmsis_gcc.h ****   @{
+ 122:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 123:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 124:Drivers/CMSIS/Include/cmsis_gcc.h **** /**
+ 125:Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Enable IRQ Interrupts
+ 126:Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Enables IRQ interrupts by clearing the I-bit in the CPSR.
+ 127:Drivers/CMSIS/Include/cmsis_gcc.h ****            Can only be executed in Privileged modes.
+ 128:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 129:Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE void __enable_irq(void)
+ 130:Drivers/CMSIS/Include/cmsis_gcc.h **** {
+ 131:Drivers/CMSIS/Include/cmsis_gcc.h ****   __ASM volatile ("cpsie i" : : : "memory");
+ 132:Drivers/CMSIS/Include/cmsis_gcc.h **** }
+ 133:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 134:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 135:Drivers/CMSIS/Include/cmsis_gcc.h **** /**
+ 136:Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Disable IRQ Interrupts
+ 137:Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Disables IRQ interrupts by setting the I-bit in the CPSR.
+ 138:Drivers/CMSIS/Include/cmsis_gcc.h ****            Can only be executed in Privileged modes.
+ 139:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 140:Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE void __disable_irq(void)
+ 141:Drivers/CMSIS/Include/cmsis_gcc.h **** {
+ 142:Drivers/CMSIS/Include/cmsis_gcc.h ****   __ASM volatile ("cpsid i" : : : "memory");
+ 203              		.loc 2 142 3
+ 204              		.syntax unified
+ 205              	@ 142 "Drivers/CMSIS/Include/cmsis_gcc.h" 1
+ 206 0034 72B6     		cpsid i
+ 207              	@ 0 "" 2
+ 143:Drivers/CMSIS/Include/cmsis_gcc.h **** }
+ 208              		.loc 2 143 1
+ 209              		.thumb
+ 210              		.syntax unified
+ 211 0036 00BF     		nop
+ 212              	.LBE7:
+ 213              	.LBE6:
+  32:Core/Src/bootloader.c **** 	__disable_irq();
+  33:Core/Src/bootloader.c **** 	app_jump_address = *( uint32_t*) (PROGRAMM_START_ADR + 4);//Адрес перехода к осн�
+ 214              		.loc 1 33 21
+ 215 0038 094B     		ldr	r3, .L10+4
+ 216              		.loc 1 33 19
+ 217 003a 1B68     		ldr	r3, [r3]
+ 218 003c FB60     		str	r3, [r7, #12]
+  34:Core/Src/bootloader.c **** 	Jump_To_Application = (pFunction)app_jump_address;
+ 219              		.loc 1 34 22
+ 220 003e FB68     		ldr	r3, [r7, #12]
+ 221 0040 BB60     		str	r3, [r7, #8]
+  35:Core/Src/bootloader.c **** 	__set_MSP(*(__IO uint32_t*) PROGRAMM_START_ADR);//Перенос стека
+ 222              		.loc 1 35 2
+ 223 0042 084B     		ldr	r3, .L10+8
+ 224 0044 1B68     		ldr	r3, [r3]
+ARM GAS  C:\Users\worker\AppData\Local\Temp\ccRQJmts.s 			page 8
+
+
+ 225 0046 7B60     		str	r3, [r7, #4]
+ 226              	.LBB8:
+ 227              	.LBB9:
+ 144:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 145:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 146:Drivers/CMSIS/Include/cmsis_gcc.h **** /**
+ 147:Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Get Control Register
+ 148:Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Returns the content of the Control Register.
+ 149:Drivers/CMSIS/Include/cmsis_gcc.h ****   \return               Control Register value
+ 150:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 151:Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE uint32_t __get_CONTROL(void)
+ 152:Drivers/CMSIS/Include/cmsis_gcc.h **** {
+ 153:Drivers/CMSIS/Include/cmsis_gcc.h ****   uint32_t result;
+ 154:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 155:Drivers/CMSIS/Include/cmsis_gcc.h ****   __ASM volatile ("MRS %0, control" : "=r" (result) );
+ 156:Drivers/CMSIS/Include/cmsis_gcc.h ****   return(result);
+ 157:Drivers/CMSIS/Include/cmsis_gcc.h **** }
+ 158:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 159:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 160:Drivers/CMSIS/Include/cmsis_gcc.h **** #if (defined (__ARM_FEATURE_CMSE ) && (__ARM_FEATURE_CMSE == 3))
+ 161:Drivers/CMSIS/Include/cmsis_gcc.h **** /**
+ 162:Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Get Control Register (non-secure)
+ 163:Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Returns the content of the non-secure Control Register when in secure mode.
+ 164:Drivers/CMSIS/Include/cmsis_gcc.h ****   \return               non-secure Control Register value
+ 165:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 166:Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE uint32_t __TZ_get_CONTROL_NS(void)
+ 167:Drivers/CMSIS/Include/cmsis_gcc.h **** {
+ 168:Drivers/CMSIS/Include/cmsis_gcc.h ****   uint32_t result;
+ 169:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 170:Drivers/CMSIS/Include/cmsis_gcc.h ****   __ASM volatile ("MRS %0, control_ns" : "=r" (result) );
+ 171:Drivers/CMSIS/Include/cmsis_gcc.h ****   return(result);
+ 172:Drivers/CMSIS/Include/cmsis_gcc.h **** }
+ 173:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 174:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 175:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 176:Drivers/CMSIS/Include/cmsis_gcc.h **** /**
+ 177:Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Set Control Register
+ 178:Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Writes the given value to the Control Register.
+ 179:Drivers/CMSIS/Include/cmsis_gcc.h ****   \param [in]    control  Control Register value to set
+ 180:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 181:Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE void __set_CONTROL(uint32_t control)
+ 182:Drivers/CMSIS/Include/cmsis_gcc.h **** {
+ 183:Drivers/CMSIS/Include/cmsis_gcc.h ****   __ASM volatile ("MSR control, %0" : : "r" (control) : "memory");
+ 184:Drivers/CMSIS/Include/cmsis_gcc.h **** }
+ 185:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 186:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 187:Drivers/CMSIS/Include/cmsis_gcc.h **** #if (defined (__ARM_FEATURE_CMSE ) && (__ARM_FEATURE_CMSE == 3))
+ 188:Drivers/CMSIS/Include/cmsis_gcc.h **** /**
+ 189:Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Set Control Register (non-secure)
+ 190:Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Writes the given value to the non-secure Control Register when in secure state.
+ 191:Drivers/CMSIS/Include/cmsis_gcc.h ****   \param [in]    control  Control Register value to set
+ 192:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 193:Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE void __TZ_set_CONTROL_NS(uint32_t control)
+ 194:Drivers/CMSIS/Include/cmsis_gcc.h **** {
+ 195:Drivers/CMSIS/Include/cmsis_gcc.h ****   __ASM volatile ("MSR control_ns, %0" : : "r" (control) : "memory");
+ 196:Drivers/CMSIS/Include/cmsis_gcc.h **** }
+ 197:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ARM GAS  C:\Users\worker\AppData\Local\Temp\ccRQJmts.s 			page 9
+
+
+ 198:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 199:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 200:Drivers/CMSIS/Include/cmsis_gcc.h **** /**
+ 201:Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Get IPSR Register
+ 202:Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Returns the content of the IPSR Register.
+ 203:Drivers/CMSIS/Include/cmsis_gcc.h ****   \return               IPSR Register value
+ 204:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 205:Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE uint32_t __get_IPSR(void)
+ 206:Drivers/CMSIS/Include/cmsis_gcc.h **** {
+ 207:Drivers/CMSIS/Include/cmsis_gcc.h ****   uint32_t result;
+ 208:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 209:Drivers/CMSIS/Include/cmsis_gcc.h ****   __ASM volatile ("MRS %0, ipsr" : "=r" (result) );
+ 210:Drivers/CMSIS/Include/cmsis_gcc.h ****   return(result);
+ 211:Drivers/CMSIS/Include/cmsis_gcc.h **** }
+ 212:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 213:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 214:Drivers/CMSIS/Include/cmsis_gcc.h **** /**
+ 215:Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Get APSR Register
+ 216:Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Returns the content of the APSR Register.
+ 217:Drivers/CMSIS/Include/cmsis_gcc.h ****   \return               APSR Register value
+ 218:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 219:Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE uint32_t __get_APSR(void)
+ 220:Drivers/CMSIS/Include/cmsis_gcc.h **** {
+ 221:Drivers/CMSIS/Include/cmsis_gcc.h ****   uint32_t result;
+ 222:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 223:Drivers/CMSIS/Include/cmsis_gcc.h ****   __ASM volatile ("MRS %0, apsr" : "=r" (result) );
+ 224:Drivers/CMSIS/Include/cmsis_gcc.h ****   return(result);
+ 225:Drivers/CMSIS/Include/cmsis_gcc.h **** }
+ 226:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 227:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 228:Drivers/CMSIS/Include/cmsis_gcc.h **** /**
+ 229:Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Get xPSR Register
+ 230:Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Returns the content of the xPSR Register.
+ 231:Drivers/CMSIS/Include/cmsis_gcc.h ****   \return               xPSR Register value
+ 232:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 233:Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE uint32_t __get_xPSR(void)
+ 234:Drivers/CMSIS/Include/cmsis_gcc.h **** {
+ 235:Drivers/CMSIS/Include/cmsis_gcc.h ****   uint32_t result;
+ 236:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 237:Drivers/CMSIS/Include/cmsis_gcc.h ****   __ASM volatile ("MRS %0, xpsr" : "=r" (result) );
+ 238:Drivers/CMSIS/Include/cmsis_gcc.h ****   return(result);
+ 239:Drivers/CMSIS/Include/cmsis_gcc.h **** }
+ 240:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 241:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 242:Drivers/CMSIS/Include/cmsis_gcc.h **** /**
+ 243:Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Get Process Stack Pointer
+ 244:Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Returns the current value of the Process Stack Pointer (PSP).
+ 245:Drivers/CMSIS/Include/cmsis_gcc.h ****   \return               PSP Register value
+ 246:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 247:Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE uint32_t __get_PSP(void)
+ 248:Drivers/CMSIS/Include/cmsis_gcc.h **** {
+ 249:Drivers/CMSIS/Include/cmsis_gcc.h ****   uint32_t result;
+ 250:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 251:Drivers/CMSIS/Include/cmsis_gcc.h ****   __ASM volatile ("MRS %0, psp"  : "=r" (result) );
+ 252:Drivers/CMSIS/Include/cmsis_gcc.h ****   return(result);
+ 253:Drivers/CMSIS/Include/cmsis_gcc.h **** }
+ 254:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ARM GAS  C:\Users\worker\AppData\Local\Temp\ccRQJmts.s 			page 10
+
+
+ 255:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 256:Drivers/CMSIS/Include/cmsis_gcc.h **** #if (defined (__ARM_FEATURE_CMSE ) && (__ARM_FEATURE_CMSE == 3))
+ 257:Drivers/CMSIS/Include/cmsis_gcc.h **** /**
+ 258:Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Get Process Stack Pointer (non-secure)
+ 259:Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Returns the current value of the non-secure Process Stack Pointer (PSP) when in secure s
+ 260:Drivers/CMSIS/Include/cmsis_gcc.h ****   \return               PSP Register value
+ 261:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 262:Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE uint32_t __TZ_get_PSP_NS(void)
+ 263:Drivers/CMSIS/Include/cmsis_gcc.h **** {
+ 264:Drivers/CMSIS/Include/cmsis_gcc.h ****   uint32_t result;
+ 265:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 266:Drivers/CMSIS/Include/cmsis_gcc.h ****   __ASM volatile ("MRS %0, psp_ns"  : "=r" (result) );
+ 267:Drivers/CMSIS/Include/cmsis_gcc.h ****   return(result);
+ 268:Drivers/CMSIS/Include/cmsis_gcc.h **** }
+ 269:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 270:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 271:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 272:Drivers/CMSIS/Include/cmsis_gcc.h **** /**
+ 273:Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Set Process Stack Pointer
+ 274:Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Assigns the given value to the Process Stack Pointer (PSP).
+ 275:Drivers/CMSIS/Include/cmsis_gcc.h ****   \param [in]    topOfProcStack  Process Stack Pointer value to set
+ 276:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 277:Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE void __set_PSP(uint32_t topOfProcStack)
+ 278:Drivers/CMSIS/Include/cmsis_gcc.h **** {
+ 279:Drivers/CMSIS/Include/cmsis_gcc.h ****   __ASM volatile ("MSR psp, %0" : : "r" (topOfProcStack) : );
+ 280:Drivers/CMSIS/Include/cmsis_gcc.h **** }
+ 281:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 282:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 283:Drivers/CMSIS/Include/cmsis_gcc.h **** #if (defined (__ARM_FEATURE_CMSE ) && (__ARM_FEATURE_CMSE == 3))
+ 284:Drivers/CMSIS/Include/cmsis_gcc.h **** /**
+ 285:Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Set Process Stack Pointer (non-secure)
+ 286:Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Assigns the given value to the non-secure Process Stack Pointer (PSP) when in secure sta
+ 287:Drivers/CMSIS/Include/cmsis_gcc.h ****   \param [in]    topOfProcStack  Process Stack Pointer value to set
+ 288:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 289:Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE void __TZ_set_PSP_NS(uint32_t topOfProcStack)
+ 290:Drivers/CMSIS/Include/cmsis_gcc.h **** {
+ 291:Drivers/CMSIS/Include/cmsis_gcc.h ****   __ASM volatile ("MSR psp_ns, %0" : : "r" (topOfProcStack) : );
+ 292:Drivers/CMSIS/Include/cmsis_gcc.h **** }
+ 293:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 294:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 295:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 296:Drivers/CMSIS/Include/cmsis_gcc.h **** /**
+ 297:Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Get Main Stack Pointer
+ 298:Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Returns the current value of the Main Stack Pointer (MSP).
+ 299:Drivers/CMSIS/Include/cmsis_gcc.h ****   \return               MSP Register value
+ 300:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 301:Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE uint32_t __get_MSP(void)
+ 302:Drivers/CMSIS/Include/cmsis_gcc.h **** {
+ 303:Drivers/CMSIS/Include/cmsis_gcc.h ****   uint32_t result;
+ 304:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 305:Drivers/CMSIS/Include/cmsis_gcc.h ****   __ASM volatile ("MRS %0, msp" : "=r" (result) );
+ 306:Drivers/CMSIS/Include/cmsis_gcc.h ****   return(result);
+ 307:Drivers/CMSIS/Include/cmsis_gcc.h **** }
+ 308:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 309:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 310:Drivers/CMSIS/Include/cmsis_gcc.h **** #if (defined (__ARM_FEATURE_CMSE ) && (__ARM_FEATURE_CMSE == 3))
+ 311:Drivers/CMSIS/Include/cmsis_gcc.h **** /**
+ARM GAS  C:\Users\worker\AppData\Local\Temp\ccRQJmts.s 			page 11
+
+
+ 312:Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Get Main Stack Pointer (non-secure)
+ 313:Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Returns the current value of the non-secure Main Stack Pointer (MSP) when in secure stat
+ 314:Drivers/CMSIS/Include/cmsis_gcc.h ****   \return               MSP Register value
+ 315:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 316:Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE uint32_t __TZ_get_MSP_NS(void)
+ 317:Drivers/CMSIS/Include/cmsis_gcc.h **** {
+ 318:Drivers/CMSIS/Include/cmsis_gcc.h ****   uint32_t result;
+ 319:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 320:Drivers/CMSIS/Include/cmsis_gcc.h ****   __ASM volatile ("MRS %0, msp_ns" : "=r" (result) );
+ 321:Drivers/CMSIS/Include/cmsis_gcc.h ****   return(result);
+ 322:Drivers/CMSIS/Include/cmsis_gcc.h **** }
+ 323:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 324:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 325:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 326:Drivers/CMSIS/Include/cmsis_gcc.h **** /**
+ 327:Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Set Main Stack Pointer
+ 328:Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Assigns the given value to the Main Stack Pointer (MSP).
+ 329:Drivers/CMSIS/Include/cmsis_gcc.h ****   \param [in]    topOfMainStack  Main Stack Pointer value to set
+ 330:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 331:Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE void __set_MSP(uint32_t topOfMainStack)
+ 332:Drivers/CMSIS/Include/cmsis_gcc.h **** {
+ 333:Drivers/CMSIS/Include/cmsis_gcc.h ****   __ASM volatile ("MSR msp, %0" : : "r" (topOfMainStack) : );
+ 228              		.loc 2 333 3
+ 229 0048 7B68     		ldr	r3, [r7, #4]
+ 230              		.syntax unified
+ 231              	@ 333 "Drivers/CMSIS/Include/cmsis_gcc.h" 1
+ 232 004a 83F30888 		MSR msp, r3
+ 233              	@ 0 "" 2
+ 334:Drivers/CMSIS/Include/cmsis_gcc.h **** }
+ 234              		.loc 2 334 1
+ 235              		.thumb
+ 236              		.syntax unified
+ 237 004e 00BF     		nop
+ 238              	.LBE9:
+ 239              	.LBE8:
+  36:Core/Src/bootloader.c ****     //SCB->VTOR=PROGRAMM_START_ADR;
+  37:Core/Src/bootloader.c **** 	Jump_To_Application();//Переход к основной программе
+ 240              		.loc 1 37 2
+ 241 0050 BB68     		ldr	r3, [r7, #8]
+ 242 0052 9847     		blx	r3
+ 243              	.LVL0:
+  38:Core/Src/bootloader.c **** }
+ 244              		.loc 1 38 1
+ 245 0054 00BF     		nop
+ 246 0056 1037     		adds	r7, r7, #16
+ 247              	.LCFI9:
+ 248              		.cfi_def_cfa_offset 8
+ 249 0058 BD46     		mov	sp, r7
+ 250              	.LCFI10:
+ 251              		.cfi_def_cfa_register 13
+ 252              		@ sp needed
+ 253 005a 80BD     		pop	{r7, pc}
+ 254              	.L11:
+ 255              		.align	2
+ 256              	.L10:
+ 257 005c 00100240 		.word	1073876992
+ 258 0060 04240008 		.word	134226948
+ARM GAS  C:\Users\worker\AppData\Local\Temp\ccRQJmts.s 			page 12
+
+
+ 259 0064 00240008 		.word	134226944
+ 260              		.cfi_endproc
+ 261              	.LFE127:
+ 263              		.section	.text.toApplMode,"ax",%progbits
+ 264              		.align	1
+ 265              		.global	toApplMode
+ 266              		.syntax unified
+ 267              		.thumb
+ 268              		.thumb_func
+ 269              		.fpu fpv4-sp-d16
+ 271              	toApplMode:
+ 272              	.LFB128:
+  39:Core/Src/bootloader.c **** 
+  40:Core/Src/bootloader.c **** uint8_t toApplMode()
+  41:Core/Src/bootloader.c **** {
+ 273              		.loc 1 41 1
+ 274              		.cfi_startproc
+ 275              		@ args = 0, pretend = 0, frame = 0
+ 276              		@ frame_needed = 1, uses_anonymous_args = 0
+ 277 0000 80B5     		push	{r7, lr}
+ 278              	.LCFI11:
+ 279              		.cfi_def_cfa_offset 8
+ 280              		.cfi_offset 7, -8
+ 281              		.cfi_offset 14, -4
+ 282 0002 00AF     		add	r7, sp, #0
+ 283              	.LCFI12:
+ 284              		.cfi_def_cfa_register 7
+ 285              	.LBB10:
+  42:Core/Src/bootloader.c **** 	uint32_t temp;
+  43:Core/Src/bootloader.c **** 	if(flashRead(PROGRAMM_START_ADR)!=0xFFFFFFFF)//Проверка наличия программы
+ 286              		.loc 1 43 5
+ 287 0004 0948     		ldr	r0, .L15
+ 288 0006 FFF7FEFF 		bl	flashRead
+ 289 000a 0346     		mov	r3, r0
+ 290              		.loc 1 43 4
+ 291 000c B3F1FF3F 		cmp	r3, #-1
+ 292 0010 08D0     		beq	.L13
+ 293              	.LBB11:
+  44:Core/Src/bootloader.c **** 	{
+  45:Core/Src/bootloader.c **** 		//Стирание boot ключа из flash
+  46:Core/Src/bootloader.c **** 		flashUnlock();
+ 294              		.loc 1 46 3
+ 295 0012 FFF7FEFF 		bl	flashUnlock
+  47:Core/Src/bootloader.c **** 		flashPageErase(BOOT_KEY_ADR);
+ 296              		.loc 1 47 3
+ 297 0016 0648     		ldr	r0, .L15+4
+ 298 0018 FFF7FEFF 		bl	flashPageErase
+  48:Core/Src/bootloader.c **** 		flashLock();
+ 299              		.loc 1 48 3
+ 300 001c FFF7FEFF 		bl	flashLock
+  49:Core/Src/bootloader.c **** 		return 1;
+ 301              		.loc 1 49 10
+ 302 0020 0123     		movs	r3, #1
+ 303 0022 00E0     		b	.L14
+ 304              	.L13:
+ 305              	.LBE11:
+ 306              	.LBE10:
+ARM GAS  C:\Users\worker\AppData\Local\Temp\ccRQJmts.s 			page 13
+
+
+  50:Core/Src/bootloader.c **** 	}
+  51:Core/Src/bootloader.c ****     return 0;
+ 307              		.loc 1 51 12
+ 308 0024 0023     		movs	r3, #0
+ 309              	.L14:
+  52:Core/Src/bootloader.c **** }
+ 310              		.loc 1 52 1
+ 311 0026 1846     		mov	r0, r3
+ 312 0028 80BD     		pop	{r7, pc}
+ 313              	.L16:
+ 314 002a 00BF     		.align	2
+ 315              	.L15:
+ 316 002c 00240008 		.word	134226944
+ 317 0030 F0FF0008 		.word	134283248
+ 318              		.cfi_endproc
+ 319              	.LFE128:
+ 321              		.section	.text.bootProcess,"ax",%progbits
+ 322              		.align	1
+ 323              		.global	bootProcess
+ 324              		.syntax unified
+ 325              		.thumb
+ 326              		.thumb_func
+ 327              		.fpu fpv4-sp-d16
+ 329              	bootProcess:
+ 330              	.LFB129:
+  53:Core/Src/bootloader.c **** 
+  54:Core/Src/bootloader.c **** void bootProcess(void)
+  55:Core/Src/bootloader.c **** {
+ 331              		.loc 1 55 1
+ 332              		.cfi_startproc
+ 333              		@ args = 0, pretend = 0, frame = 24
+ 334              		@ frame_needed = 1, uses_anonymous_args = 0
+ 335 0000 2DE9B043 		push	{r4, r5, r7, r8, r9, lr}
+ 336              	.LCFI13:
+ 337              		.cfi_def_cfa_offset 24
+ 338              		.cfi_offset 4, -24
+ 339              		.cfi_offset 5, -20
+ 340              		.cfi_offset 7, -16
+ 341              		.cfi_offset 8, -12
+ 342              		.cfi_offset 9, -8
+ 343              		.cfi_offset 14, -4
+ 344 0004 86B0     		sub	sp, sp, #24
+ 345              	.LCFI14:
+ 346              		.cfi_def_cfa_offset 48
+ 347 0006 00AF     		add	r7, sp, #0
+ 348              	.LCFI15:
+ 349              		.cfi_def_cfa_register 7
+  56:Core/Src/bootloader.c ****     can_recive_message_t* reciveData;
+  57:Core/Src/bootloader.c ****     static uint32_t validAddr = PROGRAMM_START_ADR;//Текущий адрез загружаемо
+  58:Core/Src/bootloader.c ****     static uint64_t mainAppLen;//Размер основной программы
+  59:Core/Src/bootloader.c ****     static uint64_t recivedLen=0;//Кол-во отправленных данных
+  60:Core/Src/bootloader.c ****     uint32_t i,tempData;
+  61:Core/Src/bootloader.c ****     uint8_t shift,crc;
+  62:Core/Src/bootloader.c ****     reciveData=canRead();
+ 350              		.loc 1 62 16
+ 351 0008 FFF7FEFF 		bl	canRead
+ 352 000c F860     		str	r0, [r7, #12]
+ARM GAS  C:\Users\worker\AppData\Local\Temp\ccRQJmts.s 			page 14
+
+
+  63:Core/Src/bootloader.c ****     if(reciveData!=0)
+ 353              		.loc 1 63 7
+ 354 000e FB68     		ldr	r3, [r7, #12]
+ 355 0010 002B     		cmp	r3, #0
+ 356 0012 00F01881 		beq	.L34
+  64:Core/Src/bootloader.c ****     {
+  65:Core/Src/bootloader.c ****         if (reciveData->messageId==INDIVIDUAL_ID1+20)
+ 357              		.loc 1 65 23
+ 358 0016 FB68     		ldr	r3, [r7, #12]
+ 359 0018 5B89     		ldrh	r3, [r3, #10]
+ 360              		.loc 1 65 12
+ 361 001a 792B     		cmp	r3, #121
+ 362 001c 0AD1     		bne	.L19
+  66:Core/Src/bootloader.c ****         {
+  67:Core/Src/bootloader.c ****             if(!reciveData->data[0])
+ 363              		.loc 1 67 33
+ 364 001e FB68     		ldr	r3, [r7, #12]
+ 365 0020 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 366              		.loc 1 67 15
+ 367 0022 002B     		cmp	r3, #0
+ 368 0024 06D1     		bne	.L19
+  68:Core/Src/bootloader.c ****             {
+  69:Core/Src/bootloader.c ****                 validAddr = PROGRAMM_START_ADR;
+ 369              		.loc 1 69 27
+ 370 0026 8D4B     		ldr	r3, .L38
+ 371 0028 8D4A     		ldr	r2, .L38+4
+ 372 002a 1A60     		str	r2, [r3]
+  70:Core/Src/bootloader.c ****                 state=NOT_OPERATION;
+ 373              		.loc 1 70 22
+ 374 002c 8D4B     		ldr	r3, .L38+8
+ 375 002e 0022     		movs	r2, #0
+ 376 0030 1A70     		strb	r2, [r3]
+ 377 0032 0FE1     		b	.L17
+ 378              	.L19:
+  71:Core/Src/bootloader.c ****                 return;
+  72:Core/Src/bootloader.c ****             }
+  73:Core/Src/bootloader.c ****         }
+  74:Core/Src/bootloader.c ****         switch(state)
+ 379              		.loc 1 74 9
+ 380 0034 8B4B     		ldr	r3, .L38+8
+ 381 0036 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 382 0038 022B     		cmp	r3, #2
+ 383 003a 6AD0     		beq	.L21
+ 384 003c 022B     		cmp	r3, #2
+ 385 003e 00F30981 		bgt	.L17
+ 386 0042 002B     		cmp	r3, #0
+ 387 0044 02D0     		beq	.L22
+ 388 0046 012B     		cmp	r3, #1
+ 389 0048 25D0     		beq	.L23
+ 390 004a 03E1     		b	.L17
+ 391              	.L22:
+  75:Core/Src/bootloader.c ****         {
+  76:Core/Src/bootloader.c ****             case NOT_OPERATION:
+  77:Core/Src/bootloader.c ****                 if(reciveData->messageId==INDIVIDUAL_ID1)
+ 392              		.loc 1 77 30
+ 393 004c FB68     		ldr	r3, [r7, #12]
+ 394 004e 5B89     		ldrh	r3, [r3, #10]
+ARM GAS  C:\Users\worker\AppData\Local\Temp\ccRQJmts.s 			page 15
+
+
+ 395              		.loc 1 77 19
+ 396 0050 652B     		cmp	r3, #101
+ 397 0052 40F0FA80 		bne	.L35
+  78:Core/Src/bootloader.c ****                 {
+  79:Core/Src/bootloader.c ****                     if(reciveData->data[0]==0xEE)
+ 398              		.loc 1 79 40
+ 399 0056 FB68     		ldr	r3, [r7, #12]
+ 400 0058 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 401              		.loc 1 79 23
+ 402 005a EE2B     		cmp	r3, #238
+ 403 005c 05D1     		bne	.L25
+  80:Core/Src/bootloader.c ****                     {
+  81:Core/Src/bootloader.c ****                         canWrite(BOOT_TRUE,1,INDIVIDUAL_ID1);
+ 404              		.loc 1 81 25
+ 405 005e 6522     		movs	r2, #101
+ 406 0060 0121     		movs	r1, #1
+ 407 0062 0120     		movs	r0, #1
+ 408 0064 FFF7FEFF 		bl	canWrite
+  82:Core/Src/bootloader.c ****                     }
+  83:Core/Src/bootloader.c ****                     else
+  84:Core/Src/bootloader.c ****                     {
+  85:Core/Src/bootloader.c ****                         memcpy(&tempData,reciveData->data,sizeof(uint32_t));
+  86:Core/Src/bootloader.c ****                         if(tempData==BOOT_KEY)
+  87:Core/Src/bootloader.c ****                         {
+  88:Core/Src/bootloader.c ****                             state=PREPARE_UPLOAD;
+  89:Core/Src/bootloader.c ****                             canWrite(BOOT_TRUE,1,INDIVIDUAL_ID1);
+  90:Core/Src/bootloader.c ****                         }
+  91:Core/Src/bootloader.c ****                         else
+  92:Core/Src/bootloader.c ****                         {
+  93:Core/Src/bootloader.c ****                             canWrite(BOOT_FALSE,1,INDIVIDUAL_ID1);
+  94:Core/Src/bootloader.c ****                         }
+  95:Core/Src/bootloader.c ****                     }
+  96:Core/Src/bootloader.c ****                 }
+  97:Core/Src/bootloader.c ****                 break;
+ 409              		.loc 1 97 17
+ 410 0068 EFE0     		b	.L35
+ 411              	.L25:
+  85:Core/Src/bootloader.c ****                         if(tempData==BOOT_KEY)
+ 412              		.loc 1 85 52
+ 413 006a FB68     		ldr	r3, [r7, #12]
+ 414 006c 1B68     		ldr	r3, [r3]	@ unaligned
+  85:Core/Src/bootloader.c ****                         if(tempData==BOOT_KEY)
+ 415              		.loc 1 85 25
+ 416 006e BB60     		str	r3, [r7, #8]
+  86:Core/Src/bootloader.c ****                         {
+ 417              		.loc 1 86 36
+ 418 0070 BB68     		ldr	r3, [r7, #8]
+  86:Core/Src/bootloader.c ****                         {
+ 419              		.loc 1 86 27
+ 420 0072 7D4A     		ldr	r2, .L38+12
+ 421 0074 9342     		cmp	r3, r2
+ 422 0076 08D1     		bne	.L26
+  88:Core/Src/bootloader.c ****                             canWrite(BOOT_TRUE,1,INDIVIDUAL_ID1);
+ 423              		.loc 1 88 34
+ 424 0078 7A4B     		ldr	r3, .L38+8
+ 425 007a 0122     		movs	r2, #1
+ 426 007c 1A70     		strb	r2, [r3]
+ARM GAS  C:\Users\worker\AppData\Local\Temp\ccRQJmts.s 			page 16
+
+
+  89:Core/Src/bootloader.c ****                         }
+ 427              		.loc 1 89 29
+ 428 007e 6522     		movs	r2, #101
+ 429 0080 0121     		movs	r1, #1
+ 430 0082 0120     		movs	r0, #1
+ 431 0084 FFF7FEFF 		bl	canWrite
+ 432              		.loc 1 97 17
+ 433 0088 DFE0     		b	.L35
+ 434              	.L26:
+  93:Core/Src/bootloader.c ****                         }
+ 435              		.loc 1 93 29
+ 436 008a 6522     		movs	r2, #101
+ 437 008c 0121     		movs	r1, #1
+ 438 008e 0020     		movs	r0, #0
+ 439 0090 FFF7FEFF 		bl	canWrite
+ 440              		.loc 1 97 17
+ 441 0094 D9E0     		b	.L35
+ 442              	.L23:
+  98:Core/Src/bootloader.c ****             case PREPARE_UPLOAD:
+  99:Core/Src/bootloader.c ****                 if(reciveData->messageId==INDIVIDUAL_ID1)
+ 443              		.loc 1 99 30
+ 444 0096 FB68     		ldr	r3, [r7, #12]
+ 445 0098 5B89     		ldrh	r3, [r3, #10]
+ 446              		.loc 1 99 19
+ 447 009a 652B     		cmp	r3, #101
+ 448 009c 40F0D780 		bne	.L36
+ 100:Core/Src/bootloader.c ****                 {
+ 101:Core/Src/bootloader.c ****                     memcpy(&mainAppLen,reciveData->data,sizeof(uint32_t));//Извлекаем ра
+ 449              		.loc 1 101 50
+ 450 00a0 FB68     		ldr	r3, [r7, #12]
+ 451 00a2 1B68     		ldr	r3, [r3]	@ unaligned
+ 452 00a4 1A46     		mov	r2, r3
+ 453              		.loc 1 101 21
+ 454 00a6 714B     		ldr	r3, .L38+16
+ 455 00a8 1A60     		str	r2, [r3]
+ 102:Core/Src/bootloader.c ****                     for(i=0;i<(mainAppLen/1024+1);i++)//Стираем flash память
+ 456              		.loc 1 102 26
+ 457 00aa 0023     		movs	r3, #0
+ 458 00ac 7B61     		str	r3, [r7, #20]
+ 459              		.loc 1 102 21
+ 460 00ae 0EE0     		b	.L28
+ 461              	.L29:
+ 462              	.LBB12:
+ 103:Core/Src/bootloader.c ****                     {
+ 104:Core/Src/bootloader.c ****                         flashUnlock();
+ 463              		.loc 1 104 25 discriminator 3
+ 464 00b0 FFF7FEFF 		bl	flashUnlock
+ 105:Core/Src/bootloader.c ****                         flashPageErase(validAddr+i*1024);
+ 465              		.loc 1 105 51 discriminator 3
+ 466 00b4 7B69     		ldr	r3, [r7, #20]
+ 467 00b6 9A02     		lsls	r2, r3, #10
+ 468              		.loc 1 105 25 discriminator 3
+ 469 00b8 684B     		ldr	r3, .L38
+ 470 00ba 1B68     		ldr	r3, [r3]
+ 471 00bc 1344     		add	r3, r3, r2
+ 472 00be 1846     		mov	r0, r3
+ 473 00c0 FFF7FEFF 		bl	flashPageErase
+ARM GAS  C:\Users\worker\AppData\Local\Temp\ccRQJmts.s 			page 17
+
+
+ 106:Core/Src/bootloader.c ****                         flashLock();
+ 474              		.loc 1 106 25 discriminator 3
+ 475 00c4 FFF7FEFF 		bl	flashLock
+ 476              	.LBE12:
+ 102:Core/Src/bootloader.c ****                     {
+ 477              		.loc 1 102 52 discriminator 3
+ 478 00c8 7B69     		ldr	r3, [r7, #20]
+ 479 00ca 0133     		adds	r3, r3, #1
+ 480 00cc 7B61     		str	r3, [r7, #20]
+ 481              	.L28:
+ 102:Core/Src/bootloader.c ****                     {
+ 482              		.loc 1 102 30 discriminator 1
+ 483 00ce 7B69     		ldr	r3, [r7, #20]
+ 484 00d0 1C46     		mov	r4, r3
+ 485 00d2 4FF00005 		mov	r5, #0
+ 102:Core/Src/bootloader.c ****                     {
+ 486              		.loc 1 102 42 discriminator 1
+ 487 00d6 654B     		ldr	r3, .L38+16
+ 488 00d8 D3E90001 		ldrd	r0, [r3]
+ 489 00dc 4FF00002 		mov	r2, #0
+ 490 00e0 4FF00003 		mov	r3, #0
+ 491 00e4 820A     		lsrs	r2, r0, #10
+ 492 00e6 42EA8152 		orr	r2, r2, r1, lsl #22
+ 493 00ea 8B0A     		lsrs	r3, r1, #10
+ 102:Core/Src/bootloader.c ****                     {
+ 494              		.loc 1 102 47 discriminator 1
+ 495 00ec 12F10108 		adds	r8, r2, #1
+ 496 00f0 43F10009 		adc	r9, r3, #0
+ 102:Core/Src/bootloader.c ****                     {
+ 497              		.loc 1 102 21 discriminator 1
+ 498 00f4 4D45     		cmp	r5, r9
+ 499 00f6 08BF     		it	eq
+ 500 00f8 4445     		cmpeq	r4, r8
+ 501 00fa D9D3     		bcc	.L29
+ 107:Core/Src/bootloader.c ****                     }
+ 108:Core/Src/bootloader.c ****                     canWrite(reciveData->data,reciveData->dataLen,INDIVIDUAL_ID1);
+ 502              		.loc 1 108 40
+ 503 00fc F868     		ldr	r0, [r7, #12]
+ 504              		.loc 1 108 57
+ 505 00fe FB68     		ldr	r3, [r7, #12]
+ 506 0100 1B7A     		ldrb	r3, [r3, #8]	@ zero_extendqisi2
+ 507              		.loc 1 108 21
+ 508 0102 6522     		movs	r2, #101
+ 509 0104 1946     		mov	r1, r3
+ 510 0106 FFF7FEFF 		bl	canWrite
+ 109:Core/Src/bootloader.c ****                     state=UPLOAD;
+ 511              		.loc 1 109 26
+ 512 010a 564B     		ldr	r3, .L38+8
+ 513 010c 0222     		movs	r2, #2
+ 514 010e 1A70     		strb	r2, [r3]
+ 110:Core/Src/bootloader.c ****                 }
+ 111:Core/Src/bootloader.c ****                 break;
+ 515              		.loc 1 111 17
+ 516 0110 9DE0     		b	.L36
+ 517              	.L21:
+ 112:Core/Src/bootloader.c ****             case UPLOAD:
+ 113:Core/Src/bootloader.c ****                     if(reciveData->messageId==INDIVIDUAL_ID1+10)
+ARM GAS  C:\Users\worker\AppData\Local\Temp\ccRQJmts.s 			page 18
+
+
+ 518              		.loc 1 113 34
+ 519 0112 FB68     		ldr	r3, [r7, #12]
+ 520 0114 5B89     		ldrh	r3, [r3, #10]
+ 521              		.loc 1 113 23
+ 522 0116 6F2B     		cmp	r3, #111
+ 523 0118 40F09B80 		bne	.L37
+ 524              	.LBB13:
+ 114:Core/Src/bootloader.c ****                     {
+ 115:Core/Src/bootloader.c ****                         tempData=0;
+ 525              		.loc 1 115 33
+ 526 011c 0023     		movs	r3, #0
+ 527 011e BB60     		str	r3, [r7, #8]
+ 116:Core/Src/bootloader.c ****                         shift=0;
+ 528              		.loc 1 116 30
+ 529 0120 0023     		movs	r3, #0
+ 530 0122 FB74     		strb	r3, [r7, #19]
+ 117:Core/Src/bootloader.c ****                         crc=Crc8(reciveData->data,reciveData->dataLen);
+ 531              		.loc 1 117 44
+ 532 0124 FA68     		ldr	r2, [r7, #12]
+ 533              		.loc 1 117 29
+ 534 0126 FB68     		ldr	r3, [r7, #12]
+ 535 0128 1B7A     		ldrb	r3, [r3, #8]	@ zero_extendqisi2
+ 536 012a 1946     		mov	r1, r3
+ 537 012c 1046     		mov	r0, r2
+ 538 012e FFF7FEFF 		bl	Crc8
+ 539 0132 0346     		mov	r3, r0
+ 540              		.loc 1 117 28
+ 541 0134 FB71     		strb	r3, [r7, #7]
+ 118:Core/Src/bootloader.c ****                         if(reciveData->dataLen>=4)
+ 542              		.loc 1 118 38
+ 543 0136 FB68     		ldr	r3, [r7, #12]
+ 544 0138 1B7A     		ldrb	r3, [r3, #8]	@ zero_extendqisi2
+ 545              		.loc 1 118 27
+ 546 013a 032B     		cmp	r3, #3
+ 547 013c 20D9     		bls	.L31
+ 548              	.LBB14:
+ 119:Core/Src/bootloader.c ****                         {
+ 120:Core/Src/bootloader.c ****                             tempData = (reciveData->data[3]<<24)|(reciveData->data[2]<<16)|(reciveD
+ 549              		.loc 1 120 57
+ 550 013e FB68     		ldr	r3, [r7, #12]
+ 551 0140 DB78     		ldrb	r3, [r3, #3]	@ zero_extendqisi2
+ 552              		.loc 1 120 60
+ 553 0142 1A06     		lsls	r2, r3, #24
+ 554              		.loc 1 120 83
+ 555 0144 FB68     		ldr	r3, [r7, #12]
+ 556 0146 9B78     		ldrb	r3, [r3, #2]	@ zero_extendqisi2
+ 557              		.loc 1 120 86
+ 558 0148 1B04     		lsls	r3, r3, #16
+ 559              		.loc 1 120 65
+ 560 014a 1A43     		orrs	r2, r2, r3
+ 561              		.loc 1 120 109
+ 562 014c FB68     		ldr	r3, [r7, #12]
+ 563 014e 5B78     		ldrb	r3, [r3, #1]	@ zero_extendqisi2
+ 564              		.loc 1 120 112
+ 565 0150 1B02     		lsls	r3, r3, #8
+ 566              		.loc 1 120 91
+ 567 0152 1343     		orrs	r3, r3, r2
+ARM GAS  C:\Users\worker\AppData\Local\Temp\ccRQJmts.s 			page 19
+
+
+ 568              		.loc 1 120 133
+ 569 0154 FA68     		ldr	r2, [r7, #12]
+ 570 0156 1278     		ldrb	r2, [r2]	@ zero_extendqisi2
+ 571              		.loc 1 120 116
+ 572 0158 1343     		orrs	r3, r3, r2
+ 573              		.loc 1 120 38
+ 574 015a BB60     		str	r3, [r7, #8]
+ 121:Core/Src/bootloader.c ****                             flashUnlock();
+ 575              		.loc 1 121 29
+ 576 015c FFF7FEFF 		bl	flashUnlock
+ 122:Core/Src/bootloader.c ****                             flashWriteData(validAddr,tempData);///Запись прошивки в 
+ 577              		.loc 1 122 29
+ 578 0160 3E4B     		ldr	r3, .L38
+ 579 0162 1B68     		ldr	r3, [r3]
+ 580 0164 BA68     		ldr	r2, [r7, #8]
+ 581 0166 1146     		mov	r1, r2
+ 582 0168 1846     		mov	r0, r3
+ 583 016a FFF7FEFF 		bl	flashWriteData
+ 123:Core/Src/bootloader.c ****                             flashLock();
+ 584              		.loc 1 123 29
+ 585 016e FFF7FEFF 		bl	flashLock
+ 124:Core/Src/bootloader.c ****                             validAddr+=4;
+ 586              		.loc 1 124 38
+ 587 0172 3A4B     		ldr	r3, .L38
+ 588 0174 1B68     		ldr	r3, [r3]
+ 589 0176 0433     		adds	r3, r3, #4
+ 590 0178 384A     		ldr	r2, .L38
+ 591 017a 1360     		str	r3, [r2]
+ 125:Core/Src/bootloader.c ****                             shift=4;
+ 592              		.loc 1 125 34
+ 593 017c 0423     		movs	r3, #4
+ 594 017e FB74     		strb	r3, [r7, #19]
+ 595              	.L31:
+ 596              	.LBE14:
+ 126:Core/Src/bootloader.c ****                         }
+ 127:Core/Src/bootloader.c ****                         tempData=0;
+ 597              		.loc 1 127 33
+ 598 0180 0023     		movs	r3, #0
+ 599 0182 BB60     		str	r3, [r7, #8]
+ 128:Core/Src/bootloader.c ****                         for(i=shift;i<reciveData->dataLen;i++)
+ 600              		.loc 1 128 30
+ 601 0184 FB7C     		ldrb	r3, [r7, #19]	@ zero_extendqisi2
+ 602 0186 7B61     		str	r3, [r7, #20]
+ 603              		.loc 1 128 25
+ 604 0188 11E0     		b	.L32
+ 605              	.L33:
+ 129:Core/Src/bootloader.c ****                         {
+ 130:Core/Src/bootloader.c ****                             tempData+=reciveData->data[i]<<((i-shift)*8);
+ 606              		.loc 1 130 55 discriminator 3
+ 607 018a FA68     		ldr	r2, [r7, #12]
+ 608 018c 7B69     		ldr	r3, [r7, #20]
+ 609 018e 1344     		add	r3, r3, r2
+ 610 0190 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 611 0192 1946     		mov	r1, r3
+ 612              		.loc 1 130 63 discriminator 3
+ 613 0194 FB7C     		ldrb	r3, [r7, #19]	@ zero_extendqisi2
+ 614 0196 7A69     		ldr	r2, [r7, #20]
+ARM GAS  C:\Users\worker\AppData\Local\Temp\ccRQJmts.s 			page 20
+
+
+ 615 0198 D31A     		subs	r3, r2, r3
+ 616              		.loc 1 130 70 discriminator 3
+ 617 019a DB00     		lsls	r3, r3, #3
+ 618              		.loc 1 130 58 discriminator 3
+ 619 019c 01FA03F3 		lsl	r3, r1, r3
+ 620 01a0 1A46     		mov	r2, r3
+ 621              		.loc 1 130 37 discriminator 3
+ 622 01a2 BB68     		ldr	r3, [r7, #8]
+ 623 01a4 1344     		add	r3, r3, r2
+ 624 01a6 BB60     		str	r3, [r7, #8]
+ 128:Core/Src/bootloader.c ****                         for(i=shift;i<reciveData->dataLen;i++)
+ 625              		.loc 1 128 60 discriminator 3
+ 626 01a8 7B69     		ldr	r3, [r7, #20]
+ 627 01aa 0133     		adds	r3, r3, #1
+ 628 01ac 7B61     		str	r3, [r7, #20]
+ 629              	.L32:
+ 128:Core/Src/bootloader.c ****                         for(i=shift;i<reciveData->dataLen;i++)
+ 630              		.loc 1 128 49 discriminator 1
+ 631 01ae FB68     		ldr	r3, [r7, #12]
+ 632 01b0 1B7A     		ldrb	r3, [r3, #8]	@ zero_extendqisi2
+ 633 01b2 1A46     		mov	r2, r3
+ 128:Core/Src/bootloader.c ****                         for(i=shift;i<reciveData->dataLen;i++)
+ 634              		.loc 1 128 25 discriminator 1
+ 635 01b4 7B69     		ldr	r3, [r7, #20]
+ 636 01b6 9342     		cmp	r3, r2
+ 637 01b8 E7D3     		bcc	.L33
+ 131:Core/Src/bootloader.c ****                         }
+ 132:Core/Src/bootloader.c ****                         flashUnlock();
+ 638              		.loc 1 132 25
+ 639 01ba FFF7FEFF 		bl	flashUnlock
+ 133:Core/Src/bootloader.c ****                         flashWriteData(validAddr,tempData);///Запись прошивки в flas
+ 640              		.loc 1 133 25
+ 641 01be 274B     		ldr	r3, .L38
+ 642 01c0 1B68     		ldr	r3, [r3]
+ 643 01c2 BA68     		ldr	r2, [r7, #8]
+ 644 01c4 1146     		mov	r1, r2
+ 645 01c6 1846     		mov	r0, r3
+ 646 01c8 FFF7FEFF 		bl	flashWriteData
+ 134:Core/Src/bootloader.c ****                         flashLock();
+ 647              		.loc 1 134 25
+ 648 01cc FFF7FEFF 		bl	flashLock
+ 135:Core/Src/bootloader.c ****                         validAddr+=reciveData->dataLen-shift;
+ 649              		.loc 1 135 46
+ 650 01d0 FB68     		ldr	r3, [r7, #12]
+ 651 01d2 1B7A     		ldrb	r3, [r3, #8]	@ zero_extendqisi2
+ 652 01d4 1A46     		mov	r2, r3
+ 653              		.loc 1 135 55
+ 654 01d6 FB7C     		ldrb	r3, [r7, #19]	@ zero_extendqisi2
+ 655 01d8 D31A     		subs	r3, r2, r3
+ 656 01da 1A46     		mov	r2, r3
+ 657              		.loc 1 135 34
+ 658 01dc 1F4B     		ldr	r3, .L38
+ 659 01de 1B68     		ldr	r3, [r3]
+ 660 01e0 1344     		add	r3, r3, r2
+ 661 01e2 1E4A     		ldr	r2, .L38
+ 662 01e4 1360     		str	r3, [r2]
+ 136:Core/Src/bootloader.c ****                         recivedLen+=reciveData->dataLen;
+ARM GAS  C:\Users\worker\AppData\Local\Temp\ccRQJmts.s 			page 21
+
+
+ 663              		.loc 1 136 47
+ 664 01e6 FB68     		ldr	r3, [r7, #12]
+ 665 01e8 1B7A     		ldrb	r3, [r3, #8]	@ zero_extendqisi2
+ 666 01ea D8B2     		uxtb	r0, r3
+ 667 01ec 4FF00001 		mov	r1, #0
+ 668              		.loc 1 136 35
+ 669 01f0 1F4B     		ldr	r3, .L38+20
+ 670 01f2 D3E90023 		ldrd	r2, [r3]
+ 671 01f6 8418     		adds	r4, r0, r2
+ 672 01f8 41EB0305 		adc	r5, r1, r3
+ 673 01fc 1C4B     		ldr	r3, .L38+20
+ 674 01fe C3E90045 		strd	r4, [r3]
+ 137:Core/Src/bootloader.c ****                         canWrite(&crc,1,INDIVIDUAL_ID1+10);
+ 675              		.loc 1 137 25
+ 676 0202 FB1D     		adds	r3, r7, #7
+ 677 0204 6F22     		movs	r2, #111
+ 678 0206 0121     		movs	r1, #1
+ 679 0208 1846     		mov	r0, r3
+ 680 020a FFF7FEFF 		bl	canWrite
+ 138:Core/Src/bootloader.c ****                         if(recivedLen==mainAppLen)
+ 681              		.loc 1 138 38
+ 682 020e 184B     		ldr	r3, .L38+20
+ 683 0210 D3E90001 		ldrd	r0, [r3]
+ 684 0214 154B     		ldr	r3, .L38+16
+ 685 0216 D3E90023 		ldrd	r2, [r3]
+ 686              		.loc 1 138 27
+ 687 021a 9942     		cmp	r1, r3
+ 688 021c 08BF     		it	eq
+ 689 021e 9042     		cmpeq	r0, r2
+ 690 0220 17D1     		bne	.L37
+ 691              	.LBB15:
+ 139:Core/Src/bootloader.c ****                         {
+ 140:Core/Src/bootloader.c ****                             if(toApplMode)
+ 141:Core/Src/bootloader.c ****                             {
+ 142:Core/Src/bootloader.c ****                                 delay_ms(500);
+ 692              		.loc 1 142 33
+ 693 0222 4FF4FA70 		mov	r0, #500
+ 694 0226 FFF7FEFF 		bl	delay_ms
+ 143:Core/Src/bootloader.c ****                                 canWrite(BOOT_TRUE,1,INDIVIDUAL_ID1+10);
+ 695              		.loc 1 143 33
+ 696 022a 6F22     		movs	r2, #111
+ 697 022c 0121     		movs	r1, #1
+ 698 022e 0120     		movs	r0, #1
+ 699 0230 FFF7FEFF 		bl	canWrite
+ 144:Core/Src/bootloader.c ****                                 delay_ms(500);
+ 700              		.loc 1 144 33
+ 701 0234 4FF4FA70 		mov	r0, #500
+ 702 0238 FFF7FEFF 		bl	delay_ms
+ 145:Core/Src/bootloader.c ****                                 toApplMode();
+ 703              		.loc 1 145 33
+ 704 023c FFF7FEFF 		bl	toApplMode
+ 146:Core/Src/bootloader.c ****                                 jumpToMainApp();
+ 705              		.loc 1 146 33
+ 706 0240 FFF7FEFF 		bl	jumpToMainApp
+ 707              	.LBE15:
+ 708              	.LBE13:
+ 147:Core/Src/bootloader.c ****                             }
+ARM GAS  C:\Users\worker\AppData\Local\Temp\ccRQJmts.s 			page 22
+
+
+ 148:Core/Src/bootloader.c ****                             else
+ 149:Core/Src/bootloader.c ****                             {
+ 150:Core/Src/bootloader.c ****                                 validAddr = PROGRAMM_START_ADR;
+ 151:Core/Src/bootloader.c ****                                 state=NOT_OPERATION;
+ 152:Core/Src/bootloader.c ****                             }
+ 153:Core/Src/bootloader.c ****                         }
+ 154:Core/Src/bootloader.c ****                     }
+ 155:Core/Src/bootloader.c ****                 break;
+ 709              		.loc 1 155 17
+ 710 0244 05E0     		b	.L37
+ 711              	.L34:
+ 156:Core/Src/bootloader.c ****         }
+ 157:Core/Src/bootloader.c ****         
+ 158:Core/Src/bootloader.c ****     }
+ 712              		.loc 1 158 5
+ 713 0246 00BF     		nop
+ 714 0248 04E0     		b	.L17
+ 715              	.L35:
+  97:Core/Src/bootloader.c ****             case PREPARE_UPLOAD:
+ 716              		.loc 1 97 17
+ 717 024a 00BF     		nop
+ 718 024c 02E0     		b	.L17
+ 719              	.L36:
+ 111:Core/Src/bootloader.c ****             case UPLOAD:
+ 720              		.loc 1 111 17
+ 721 024e 00BF     		nop
+ 722 0250 00E0     		b	.L17
+ 723              	.L37:
+ 155:Core/Src/bootloader.c ****         }
+ 724              		.loc 1 155 17
+ 725 0252 00BF     		nop
+ 726              	.L17:
+ 159:Core/Src/bootloader.c **** }...
+ 727              		.loc 1 159 1
+ 728 0254 1837     		adds	r7, r7, #24
+ 729              	.LCFI16:
+ 730              		.cfi_def_cfa_offset 24
+ 731 0256 BD46     		mov	sp, r7
+ 732              	.LCFI17:
+ 733              		.cfi_def_cfa_register 13
+ 734              		@ sp needed
+ 735 0258 BDE8B083 		pop	{r4, r5, r7, r8, r9, pc}
+ 736              	.L39:
+ 737              		.align	2
+ 738              	.L38:
+ 739 025c 00000000 		.word	validAddr.8444
+ 740 0260 00240008 		.word	134226944
+ 741 0264 00000000 		.word	state
+ 742 0268 368B1D86 		.word	-2044884170
+ 743 026c 00000000 		.word	mainAppLen.8445
+ 744 0270 00000000 		.word	recivedLen.8446
+ 745              		.cfi_endproc
+ 746              	.LFE129:
+ 748              		.section	.data.validAddr.8444,"aw"
+ 749              		.align	2
+ 752              	validAddr.8444:
+ 753 0000 00240008 		.word	134226944
+ARM GAS  C:\Users\worker\AppData\Local\Temp\ccRQJmts.s 			page 23
+
+
+ 754              		.section	.bss.mainAppLen.8445,"aw",%nobits
+ 755              		.align	3
+ 758              	mainAppLen.8445:
+ 759 0000 00000000 		.space	8
+ 759      00000000 
+ 760              		.section	.bss.recivedLen.8446,"aw",%nobits
+ 761              		.align	3
+ 764              	recivedLen.8446:
+ 765 0000 00000000 		.space	8
+ 765      00000000 
+ 766              		.text
+ 767              	.Letext0:
+ 768              		.file 3 "c:\\work\\arm\\xpack-arm-none-eabi-gcc-9.2.1-1.1\\arm-none-eabi\\include\\machine\\_defau
+ 769              		.file 4 "c:\\work\\arm\\xpack-arm-none-eabi-gcc-9.2.1-1.1\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 770              		.file 5 "Drivers/CMSIS/Include/core_cm4.h"
+ 771              		.file 6 "Drivers/CMSIS/Device/ST/STM32F3xx/Include/system_stm32f3xx.h"
+ 772              		.file 7 "Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303x8.h"
+ 773              		.file 8 "c:\\work\\arm\\xpack-arm-none-eabi-gcc-9.2.1-1.1\\arm-none-eabi\\include\\sys\\lock.h"
+ 774              		.file 9 "c:\\work\\arm\\xpack-arm-none-eabi-gcc-9.2.1-1.1\\arm-none-eabi\\include\\sys\\_types.h"
+ 775              		.file 10 "c:\\work\\arm\\xpack-arm-none-eabi-gcc-9.2.1-1.1\\lib\\gcc\\arm-none-eabi\\9.2.1\\includ
+ 776              		.file 11 "c:\\work\\arm\\xpack-arm-none-eabi-gcc-9.2.1-1.1\\arm-none-eabi\\include\\sys\\reent.h"
+ 777              		.file 12 "Core/Inc/can.h"
+ 778              		.file 13 "c:\\work\\arm\\xpack-arm-none-eabi-gcc-9.2.1-1.1\\arm-none-eabi\\include\\stdlib.h"
+ 779              		.file 14 "Core/Inc/bootloader.h"
+ 780              		.file 15 "Core/Inc/rcc.h"
+ARM GAS  C:\Users\worker\AppData\Local\Temp\ccRQJmts.s 			page 24
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 bootloader.c
+C:\Users\worker\AppData\Local\Temp\ccRQJmts.s:18     .bss.TimingDelay:0000000000000000 $d
+C:\Users\worker\AppData\Local\Temp\ccRQJmts.s:21     .bss.TimingDelay:0000000000000000 TimingDelay
+C:\Users\worker\AppData\Local\Temp\ccRQJmts.s:27     .bss.state:0000000000000000 state
+C:\Users\worker\AppData\Local\Temp\ccRQJmts.s:28     .bss.state:0000000000000000 $d
+C:\Users\worker\AppData\Local\Temp\ccRQJmts.s:30     .text.Crc8:0000000000000000 $t
+C:\Users\worker\AppData\Local\Temp\ccRQJmts.s:38     .text.Crc8:0000000000000000 Crc8
+C:\Users\worker\AppData\Local\Temp\ccRQJmts.s:141    .text.jumpToMainApp:0000000000000000 $t
+C:\Users\worker\AppData\Local\Temp\ccRQJmts.s:148    .text.jumpToMainApp:0000000000000000 jumpToMainApp
+C:\Users\worker\AppData\Local\Temp\ccRQJmts.s:257    .text.jumpToMainApp:000000000000005c $d
+C:\Users\worker\AppData\Local\Temp\ccRQJmts.s:264    .text.toApplMode:0000000000000000 $t
+C:\Users\worker\AppData\Local\Temp\ccRQJmts.s:271    .text.toApplMode:0000000000000000 toApplMode
+C:\Users\worker\AppData\Local\Temp\ccRQJmts.s:316    .text.toApplMode:000000000000002c $d
+C:\Users\worker\AppData\Local\Temp\ccRQJmts.s:322    .text.bootProcess:0000000000000000 $t
+C:\Users\worker\AppData\Local\Temp\ccRQJmts.s:329    .text.bootProcess:0000000000000000 bootProcess
+C:\Users\worker\AppData\Local\Temp\ccRQJmts.s:739    .text.bootProcess:000000000000025c $d
+C:\Users\worker\AppData\Local\Temp\ccRQJmts.s:752    .data.validAddr.8444:0000000000000000 validAddr.8444
+C:\Users\worker\AppData\Local\Temp\ccRQJmts.s:758    .bss.mainAppLen.8445:0000000000000000 mainAppLen.8445
+C:\Users\worker\AppData\Local\Temp\ccRQJmts.s:764    .bss.recivedLen.8446:0000000000000000 recivedLen.8446
+C:\Users\worker\AppData\Local\Temp\ccRQJmts.s:749    .data.validAddr.8444:0000000000000000 $d
+C:\Users\worker\AppData\Local\Temp\ccRQJmts.s:755    .bss.mainAppLen.8445:0000000000000000 $d
+C:\Users\worker\AppData\Local\Temp\ccRQJmts.s:761    .bss.recivedLen.8446:0000000000000000 $d
+
+UNDEFINED SYMBOLS
+flashRead
+flashUnlock
+flashPageErase
+flashLock
+canRead
+canWrite
+flashWriteData
+delay_ms

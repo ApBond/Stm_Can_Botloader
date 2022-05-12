@@ -1,0 +1,454 @@
+ARM GAS  C:\Users\worker\AppData\Local\Temp\ccODrf2d.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"flash.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.bss.TimingDelay,"aw",%nobits
+  18              		.align	2
+  21              	TimingDelay:
+  22 0000 00000000 		.space	4
+  23              		.section	.text.flashUnlock,"ax",%progbits
+  24              		.align	1
+  25              		.global	flashUnlock
+  26              		.arch armv7e-m
+  27              		.syntax unified
+  28              		.thumb
+  29              		.thumb_func
+  30              		.fpu fpv4-sp-d16
+  32              	flashUnlock:
+  33              	.LFB126:
+  34              		.file 1 "Core/Src/flash.c"
+   1:Core/Src/flash.c **** #include "flash.h"
+   2:Core/Src/flash.c **** 
+   3:Core/Src/flash.c **** void flashUnlock()
+   4:Core/Src/flash.c **** {
+  35              		.loc 1 4 1
+  36              		.cfi_startproc
+  37              		@ args = 0, pretend = 0, frame = 0
+  38              		@ frame_needed = 1, uses_anonymous_args = 0
+  39              		@ link register save eliminated.
+  40 0000 80B4     		push	{r7}
+  41              	.LCFI0:
+  42              		.cfi_def_cfa_offset 4
+  43              		.cfi_offset 7, -4
+  44 0002 00AF     		add	r7, sp, #0
+  45              	.LCFI1:
+  46              		.cfi_def_cfa_register 7
+   5:Core/Src/flash.c **** 	FLASH->KEYR = FLASH_KEY_1;
+  47              		.loc 1 5 7
+  48 0004 054B     		ldr	r3, .L2
+  49              		.loc 1 5 14
+  50 0006 064A     		ldr	r2, .L2+4
+  51 0008 5A60     		str	r2, [r3, #4]
+   6:Core/Src/flash.c **** 	FLASH->KEYR = FLASH_KEY_2;
+  52              		.loc 1 6 7
+  53 000a 044B     		ldr	r3, .L2
+  54              		.loc 1 6 14
+ARM GAS  C:\Users\worker\AppData\Local\Temp\ccODrf2d.s 			page 2
+
+
+  55 000c 054A     		ldr	r2, .L2+8
+  56 000e 5A60     		str	r2, [r3, #4]
+   7:Core/Src/flash.c **** }
+  57              		.loc 1 7 1
+  58 0010 00BF     		nop
+  59 0012 BD46     		mov	sp, r7
+  60              	.LCFI2:
+  61              		.cfi_def_cfa_register 13
+  62              		@ sp needed
+  63 0014 5DF8047B 		ldr	r7, [sp], #4
+  64              	.LCFI3:
+  65              		.cfi_restore 7
+  66              		.cfi_def_cfa_offset 0
+  67 0018 7047     		bx	lr
+  68              	.L3:
+  69 001a 00BF     		.align	2
+  70              	.L2:
+  71 001c 00200240 		.word	1073881088
+  72 0020 23016745 		.word	1164378403
+  73 0024 AB89EFCD 		.word	-839939669
+  74              		.cfi_endproc
+  75              	.LFE126:
+  77              		.section	.text.flashLock,"ax",%progbits
+  78              		.align	1
+  79              		.global	flashLock
+  80              		.syntax unified
+  81              		.thumb
+  82              		.thumb_func
+  83              		.fpu fpv4-sp-d16
+  85              	flashLock:
+  86              	.LFB127:
+   8:Core/Src/flash.c **** 
+   9:Core/Src/flash.c **** void flashLock()
+  10:Core/Src/flash.c **** {
+  87              		.loc 1 10 1
+  88              		.cfi_startproc
+  89              		@ args = 0, pretend = 0, frame = 0
+  90              		@ frame_needed = 1, uses_anonymous_args = 0
+  91              		@ link register save eliminated.
+  92 0000 80B4     		push	{r7}
+  93              	.LCFI4:
+  94              		.cfi_def_cfa_offset 4
+  95              		.cfi_offset 7, -4
+  96 0002 00AF     		add	r7, sp, #0
+  97              	.LCFI5:
+  98              		.cfi_def_cfa_register 7
+  11:Core/Src/flash.c **** 	FLASH->CR|=FLASH_CR_LOCK;
+  99              		.loc 1 11 11
+ 100 0004 054B     		ldr	r3, .L5
+ 101 0006 1B69     		ldr	r3, [r3, #16]
+ 102 0008 044A     		ldr	r2, .L5
+ 103 000a 43F08003 		orr	r3, r3, #128
+ 104 000e 1361     		str	r3, [r2, #16]
+  12:Core/Src/flash.c **** }
+ 105              		.loc 1 12 1
+ 106 0010 00BF     		nop
+ 107 0012 BD46     		mov	sp, r7
+ARM GAS  C:\Users\worker\AppData\Local\Temp\ccODrf2d.s 			page 3
+
+
+ 108              	.LCFI6:
+ 109              		.cfi_def_cfa_register 13
+ 110              		@ sp needed
+ 111 0014 5DF8047B 		ldr	r7, [sp], #4
+ 112              	.LCFI7:
+ 113              		.cfi_restore 7
+ 114              		.cfi_def_cfa_offset 0
+ 115 0018 7047     		bx	lr
+ 116              	.L6:
+ 117 001a 00BF     		.align	2
+ 118              	.L5:
+ 119 001c 00200240 		.word	1073881088
+ 120              		.cfi_endproc
+ 121              	.LFE127:
+ 123              		.section	.text.flashWriteData,"ax",%progbits
+ 124              		.align	1
+ 125              		.global	flashWriteData
+ 126              		.syntax unified
+ 127              		.thumb
+ 128              		.thumb_func
+ 129              		.fpu fpv4-sp-d16
+ 131              	flashWriteData:
+ 132              	.LFB128:
+  13:Core/Src/flash.c **** 
+  14:Core/Src/flash.c **** void flashWriteData(uint32_t adr, uint32_t data)
+  15:Core/Src/flash.c **** {
+ 133              		.loc 1 15 1
+ 134              		.cfi_startproc
+ 135              		@ args = 0, pretend = 0, frame = 8
+ 136              		@ frame_needed = 1, uses_anonymous_args = 0
+ 137              		@ link register save eliminated.
+ 138 0000 80B4     		push	{r7}
+ 139              	.LCFI8:
+ 140              		.cfi_def_cfa_offset 4
+ 141              		.cfi_offset 7, -4
+ 142 0002 83B0     		sub	sp, sp, #12
+ 143              	.LCFI9:
+ 144              		.cfi_def_cfa_offset 16
+ 145 0004 00AF     		add	r7, sp, #0
+ 146              	.LCFI10:
+ 147              		.cfi_def_cfa_register 7
+ 148 0006 7860     		str	r0, [r7, #4]
+ 149 0008 3960     		str	r1, [r7]
+  16:Core/Src/flash.c **** 	
+  17:Core/Src/flash.c **** 	while((FLASH->SR & FLASH_SR_BSY)!=0);
+ 150              		.loc 1 17 7
+ 151 000a 00BF     		nop
+ 152              	.L8:
+ 153              		.loc 1 17 14 discriminator 1
+ 154 000c 194B     		ldr	r3, .L11
+ 155 000e DB68     		ldr	r3, [r3, #12]
+ 156              		.loc 1 17 19 discriminator 1
+ 157 0010 03F00103 		and	r3, r3, #1
+ 158              		.loc 1 17 7 discriminator 1
+ 159 0014 002B     		cmp	r3, #0
+ 160 0016 F9D1     		bne	.L8
+  18:Core/Src/flash.c **** 	FLASH->CR|=FLASH_CR_PG;
+ARM GAS  C:\Users\worker\AppData\Local\Temp\ccODrf2d.s 			page 4
+
+
+ 161              		.loc 1 18 11
+ 162 0018 164B     		ldr	r3, .L11
+ 163 001a 1B69     		ldr	r3, [r3, #16]
+ 164 001c 154A     		ldr	r2, .L11
+ 165 001e 43F00103 		orr	r3, r3, #1
+ 166 0022 1361     		str	r3, [r2, #16]
+  19:Core/Src/flash.c **** 	*(__IO uint16_t*) adr = (uint16_t)data;
+ 167              		.loc 1 19 3
+ 168 0024 7B68     		ldr	r3, [r7, #4]
+ 169              		.loc 1 19 26
+ 170 0026 3A68     		ldr	r2, [r7]
+ 171 0028 92B2     		uxth	r2, r2
+ 172              		.loc 1 19 24
+ 173 002a 1A80     		strh	r2, [r3]	@ movhi
+  20:Core/Src/flash.c **** 	while((FLASH->SR & FLASH_SR_BSY)!=0);
+ 174              		.loc 1 20 7
+ 175 002c 00BF     		nop
+ 176              	.L9:
+ 177              		.loc 1 20 14 discriminator 1
+ 178 002e 114B     		ldr	r3, .L11
+ 179 0030 DB68     		ldr	r3, [r3, #12]
+ 180              		.loc 1 20 19 discriminator 1
+ 181 0032 03F00103 		and	r3, r3, #1
+ 182              		.loc 1 20 7 discriminator 1
+ 183 0036 002B     		cmp	r3, #0
+ 184 0038 F9D1     		bne	.L9
+  21:Core/Src/flash.c **** 	adr+=2;
+ 185              		.loc 1 21 5
+ 186 003a 7B68     		ldr	r3, [r7, #4]
+ 187 003c 0233     		adds	r3, r3, #2
+ 188 003e 7B60     		str	r3, [r7, #4]
+  22:Core/Src/flash.c **** 	data>>=16;
+ 189              		.loc 1 22 6
+ 190 0040 3B68     		ldr	r3, [r7]
+ 191 0042 1B0C     		lsrs	r3, r3, #16
+ 192 0044 3B60     		str	r3, [r7]
+  23:Core/Src/flash.c **** 	*(__IO uint16_t*) adr = (uint16_t)data;
+ 193              		.loc 1 23 3
+ 194 0046 7B68     		ldr	r3, [r7, #4]
+ 195              		.loc 1 23 26
+ 196 0048 3A68     		ldr	r2, [r7]
+ 197 004a 92B2     		uxth	r2, r2
+ 198              		.loc 1 23 24
+ 199 004c 1A80     		strh	r2, [r3]	@ movhi
+  24:Core/Src/flash.c **** 	while((FLASH->SR & FLASH_SR_BSY)!=0);
+ 200              		.loc 1 24 7
+ 201 004e 00BF     		nop
+ 202              	.L10:
+ 203              		.loc 1 24 14 discriminator 1
+ 204 0050 084B     		ldr	r3, .L11
+ 205 0052 DB68     		ldr	r3, [r3, #12]
+ 206              		.loc 1 24 19 discriminator 1
+ 207 0054 03F00103 		and	r3, r3, #1
+ 208              		.loc 1 24 7 discriminator 1
+ 209 0058 002B     		cmp	r3, #0
+ 210 005a F9D1     		bne	.L10
+  25:Core/Src/flash.c **** 	FLASH->CR&=~FLASH_CR_PG;
+ARM GAS  C:\Users\worker\AppData\Local\Temp\ccODrf2d.s 			page 5
+
+
+ 211              		.loc 1 25 11
+ 212 005c 054B     		ldr	r3, .L11
+ 213 005e 1B69     		ldr	r3, [r3, #16]
+ 214 0060 044A     		ldr	r2, .L11
+ 215 0062 23F00103 		bic	r3, r3, #1
+ 216 0066 1361     		str	r3, [r2, #16]
+  26:Core/Src/flash.c **** }
+ 217              		.loc 1 26 1
+ 218 0068 00BF     		nop
+ 219 006a 0C37     		adds	r7, r7, #12
+ 220              	.LCFI11:
+ 221              		.cfi_def_cfa_offset 4
+ 222 006c BD46     		mov	sp, r7
+ 223              	.LCFI12:
+ 224              		.cfi_def_cfa_register 13
+ 225              		@ sp needed
+ 226 006e 5DF8047B 		ldr	r7, [sp], #4
+ 227              	.LCFI13:
+ 228              		.cfi_restore 7
+ 229              		.cfi_def_cfa_offset 0
+ 230 0072 7047     		bx	lr
+ 231              	.L12:
+ 232              		.align	2
+ 233              	.L11:
+ 234 0074 00200240 		.word	1073881088
+ 235              		.cfi_endproc
+ 236              	.LFE128:
+ 238              		.section	.text.flashPageErase,"ax",%progbits
+ 239              		.align	1
+ 240              		.global	flashPageErase
+ 241              		.syntax unified
+ 242              		.thumb
+ 243              		.thumb_func
+ 244              		.fpu fpv4-sp-d16
+ 246              	flashPageErase:
+ 247              	.LFB129:
+  27:Core/Src/flash.c **** 
+  28:Core/Src/flash.c **** 
+  29:Core/Src/flash.c **** void flashPageErase(uint32_t adr)
+  30:Core/Src/flash.c **** {
+ 248              		.loc 1 30 1
+ 249              		.cfi_startproc
+ 250              		@ args = 0, pretend = 0, frame = 8
+ 251              		@ frame_needed = 1, uses_anonymous_args = 0
+ 252              		@ link register save eliminated.
+ 253 0000 80B4     		push	{r7}
+ 254              	.LCFI14:
+ 255              		.cfi_def_cfa_offset 4
+ 256              		.cfi_offset 7, -4
+ 257 0002 83B0     		sub	sp, sp, #12
+ 258              	.LCFI15:
+ 259              		.cfi_def_cfa_offset 16
+ 260 0004 00AF     		add	r7, sp, #0
+ 261              	.LCFI16:
+ 262              		.cfi_def_cfa_register 7
+ 263 0006 7860     		str	r0, [r7, #4]
+  31:Core/Src/flash.c **** 	FLASH->CR|=FLASH_CR_PER;
+ARM GAS  C:\Users\worker\AppData\Local\Temp\ccODrf2d.s 			page 6
+
+
+ 264              		.loc 1 31 11
+ 265 0008 104B     		ldr	r3, .L15
+ 266 000a 1B69     		ldr	r3, [r3, #16]
+ 267 000c 0F4A     		ldr	r2, .L15
+ 268 000e 43F00203 		orr	r3, r3, #2
+ 269 0012 1361     		str	r3, [r2, #16]
+  32:Core/Src/flash.c **** 	FLASH->AR = (uint32_t)adr;
+ 270              		.loc 1 32 7
+ 271 0014 0D4A     		ldr	r2, .L15
+ 272              		.loc 1 32 12
+ 273 0016 7B68     		ldr	r3, [r7, #4]
+ 274 0018 5361     		str	r3, [r2, #20]
+  33:Core/Src/flash.c **** 	FLASH->CR|=FLASH_CR_STRT;
+ 275              		.loc 1 33 11
+ 276 001a 0C4B     		ldr	r3, .L15
+ 277 001c 1B69     		ldr	r3, [r3, #16]
+ 278 001e 0B4A     		ldr	r2, .L15
+ 279 0020 43F04003 		orr	r3, r3, #64
+ 280 0024 1361     		str	r3, [r2, #16]
+  34:Core/Src/flash.c **** 	while((FLASH->SR & FLASH_SR_BSY)!=0);
+ 281              		.loc 1 34 7
+ 282 0026 00BF     		nop
+ 283              	.L14:
+ 284              		.loc 1 34 14 discriminator 1
+ 285 0028 084B     		ldr	r3, .L15
+ 286 002a DB68     		ldr	r3, [r3, #12]
+ 287              		.loc 1 34 19 discriminator 1
+ 288 002c 03F00103 		and	r3, r3, #1
+ 289              		.loc 1 34 7 discriminator 1
+ 290 0030 002B     		cmp	r3, #0
+ 291 0032 F9D1     		bne	.L14
+  35:Core/Src/flash.c **** 	FLASH->CR&=~FLASH_CR_PER;
+ 292              		.loc 1 35 11
+ 293 0034 054B     		ldr	r3, .L15
+ 294 0036 1B69     		ldr	r3, [r3, #16]
+ 295 0038 044A     		ldr	r2, .L15
+ 296 003a 23F00203 		bic	r3, r3, #2
+ 297 003e 1361     		str	r3, [r2, #16]
+  36:Core/Src/flash.c **** }
+ 298              		.loc 1 36 1
+ 299 0040 00BF     		nop
+ 300 0042 0C37     		adds	r7, r7, #12
+ 301              	.LCFI17:
+ 302              		.cfi_def_cfa_offset 4
+ 303 0044 BD46     		mov	sp, r7
+ 304              	.LCFI18:
+ 305              		.cfi_def_cfa_register 13
+ 306              		@ sp needed
+ 307 0046 5DF8047B 		ldr	r7, [sp], #4
+ 308              	.LCFI19:
+ 309              		.cfi_restore 7
+ 310              		.cfi_def_cfa_offset 0
+ 311 004a 7047     		bx	lr
+ 312              	.L16:
+ 313              		.align	2
+ 314              	.L15:
+ 315 004c 00200240 		.word	1073881088
+ARM GAS  C:\Users\worker\AppData\Local\Temp\ccODrf2d.s 			page 7
+
+
+ 316              		.cfi_endproc
+ 317              	.LFE129:
+ 319              		.section	.text.flashRead,"ax",%progbits
+ 320              		.align	1
+ 321              		.global	flashRead
+ 322              		.syntax unified
+ 323              		.thumb
+ 324              		.thumb_func
+ 325              		.fpu fpv4-sp-d16
+ 327              	flashRead:
+ 328              	.LFB130:
+  37:Core/Src/flash.c **** 
+  38:Core/Src/flash.c **** uint32_t flashRead(uint32_t address)
+  39:Core/Src/flash.c **** {
+ 329              		.loc 1 39 1
+ 330              		.cfi_startproc
+ 331              		@ args = 0, pretend = 0, frame = 8
+ 332              		@ frame_needed = 1, uses_anonymous_args = 0
+ 333              		@ link register save eliminated.
+ 334 0000 80B4     		push	{r7}
+ 335              	.LCFI20:
+ 336              		.cfi_def_cfa_offset 4
+ 337              		.cfi_offset 7, -4
+ 338 0002 83B0     		sub	sp, sp, #12
+ 339              	.LCFI21:
+ 340              		.cfi_def_cfa_offset 16
+ 341 0004 00AF     		add	r7, sp, #0
+ 342              	.LCFI22:
+ 343              		.cfi_def_cfa_register 7
+ 344 0006 7860     		str	r0, [r7, #4]
+  40:Core/Src/flash.c **** 	return (*(__IO uint32_t*) address);
+ 345              		.loc 1 40 11
+ 346 0008 7B68     		ldr	r3, [r7, #4]
+ 347              		.loc 1 40 10
+ 348 000a 1B68     		ldr	r3, [r3]
+  41:Core/Src/flash.c **** }
+ 349              		.loc 1 41 1
+ 350 000c 1846     		mov	r0, r3
+ 351 000e 0C37     		adds	r7, r7, #12
+ 352              	.LCFI23:
+ 353              		.cfi_def_cfa_offset 4
+ 354 0010 BD46     		mov	sp, r7
+ 355              	.LCFI24:
+ 356              		.cfi_def_cfa_register 13
+ 357              		@ sp needed
+ 358 0012 5DF8047B 		ldr	r7, [sp], #4
+ 359              	.LCFI25:
+ 360              		.cfi_restore 7
+ 361              		.cfi_def_cfa_offset 0
+ 362 0016 7047     		bx	lr
+ 363              		.cfi_endproc
+ 364              	.LFE130:
+ 366              		.text
+ 367              	.Letext0:
+ 368              		.file 2 "c:\\work\\arm\\xpack-arm-none-eabi-gcc-9.2.1-1.1\\arm-none-eabi\\include\\machine\\_defau
+ 369              		.file 3 "c:\\work\\arm\\xpack-arm-none-eabi-gcc-9.2.1-1.1\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 370              		.file 4 "Drivers/CMSIS/Include/core_cm4.h"
+ARM GAS  C:\Users\worker\AppData\Local\Temp\ccODrf2d.s 			page 8
+
+
+ 371              		.file 5 "Drivers/CMSIS/Device/ST/STM32F3xx/Include/system_stm32f3xx.h"
+ 372              		.file 6 "Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303x8.h"
+ 373              		.file 7 "c:\\work\\arm\\xpack-arm-none-eabi-gcc-9.2.1-1.1\\arm-none-eabi\\include\\sys\\lock.h"
+ 374              		.file 8 "c:\\work\\arm\\xpack-arm-none-eabi-gcc-9.2.1-1.1\\arm-none-eabi\\include\\sys\\_types.h"
+ 375              		.file 9 "c:\\work\\arm\\xpack-arm-none-eabi-gcc-9.2.1-1.1\\lib\\gcc\\arm-none-eabi\\9.2.1\\include
+ 376              		.file 10 "c:\\work\\arm\\xpack-arm-none-eabi-gcc-9.2.1-1.1\\arm-none-eabi\\include\\sys\\reent.h"
+ 377              		.file 11 "c:\\work\\arm\\xpack-arm-none-eabi-gcc-9.2.1-1.1\\arm-none-eabi\\include\\stdlib.h"
+ 378              		.file 12 "Core/Inc/rcc.h"
+ARM GAS  C:\Users\worker\AppData\Local\Temp\ccODrf2d.s 			page 9
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 flash.c
+C:\Users\worker\AppData\Local\Temp\ccODrf2d.s:18     .bss.TimingDelay:0000000000000000 $d
+C:\Users\worker\AppData\Local\Temp\ccODrf2d.s:21     .bss.TimingDelay:0000000000000000 TimingDelay
+C:\Users\worker\AppData\Local\Temp\ccODrf2d.s:24     .text.flashUnlock:0000000000000000 $t
+C:\Users\worker\AppData\Local\Temp\ccODrf2d.s:32     .text.flashUnlock:0000000000000000 flashUnlock
+C:\Users\worker\AppData\Local\Temp\ccODrf2d.s:71     .text.flashUnlock:000000000000001c $d
+C:\Users\worker\AppData\Local\Temp\ccODrf2d.s:78     .text.flashLock:0000000000000000 $t
+C:\Users\worker\AppData\Local\Temp\ccODrf2d.s:85     .text.flashLock:0000000000000000 flashLock
+C:\Users\worker\AppData\Local\Temp\ccODrf2d.s:119    .text.flashLock:000000000000001c $d
+C:\Users\worker\AppData\Local\Temp\ccODrf2d.s:124    .text.flashWriteData:0000000000000000 $t
+C:\Users\worker\AppData\Local\Temp\ccODrf2d.s:131    .text.flashWriteData:0000000000000000 flashWriteData
+C:\Users\worker\AppData\Local\Temp\ccODrf2d.s:234    .text.flashWriteData:0000000000000074 $d
+C:\Users\worker\AppData\Local\Temp\ccODrf2d.s:239    .text.flashPageErase:0000000000000000 $t
+C:\Users\worker\AppData\Local\Temp\ccODrf2d.s:246    .text.flashPageErase:0000000000000000 flashPageErase
+C:\Users\worker\AppData\Local\Temp\ccODrf2d.s:315    .text.flashPageErase:000000000000004c $d
+C:\Users\worker\AppData\Local\Temp\ccODrf2d.s:320    .text.flashRead:0000000000000000 $t
+C:\Users\worker\AppData\Local\Temp\ccODrf2d.s:327    .text.flashRead:0000000000000000 flashRead
+
+NO UNDEFINED SYMBOLS

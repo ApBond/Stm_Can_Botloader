@@ -1,0 +1,171 @@
+ARM GAS  C:\Users\worker\AppData\Local\Temp\ccbv52No.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 6
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"main.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.bss.TimingDelay,"aw",%nobits
+  18              		.align	2
+  21              	TimingDelay:
+  22 0000 00000000 		.space	4
+  23              		.section	.rodata
+  24              		.align	2
+  25              	.LC0:
+  26 0000 6500     		.short	101
+  27 0002 6F00     		.short	111
+  28 0004 7900     		.short	121
+  29 0006 8300     		.short	131
+  30              		.section	.text.main,"ax",%progbits
+  31              		.align	1
+  32              		.global	main
+  33              		.arch armv7e-m
+  34              		.syntax unified
+  35              		.thumb
+  36              		.thumb_func
+  37              		.fpu fpv4-sp-d16
+  39              	main:
+  40              	.LFB126:
+  41              		.file 1 "Core/Src/main.c"
+   1:Core/Src/main.c **** #include "main.h"
+   2:Core/Src/main.c **** 
+   3:Core/Src/main.c **** 
+   4:Core/Src/main.c **** int main(void)
+   5:Core/Src/main.c **** {
+  42              		.loc 1 5 1
+  43              		.cfi_startproc
+  44              		@ args = 0, pretend = 0, frame = 16
+  45              		@ frame_needed = 1, uses_anonymous_args = 0
+  46 0000 80B5     		push	{r7, lr}
+  47              	.LCFI0:
+  48              		.cfi_def_cfa_offset 8
+  49              		.cfi_offset 7, -8
+  50              		.cfi_offset 14, -4
+  51 0002 84B0     		sub	sp, sp, #16
+  52              	.LCFI1:
+  53              		.cfi_def_cfa_offset 24
+  54 0004 00AF     		add	r7, sp, #0
+  55              	.LCFI2:
+ARM GAS  C:\Users\worker\AppData\Local\Temp\ccbv52No.s 			page 2
+
+
+  56              		.cfi_def_cfa_register 7
+   6:Core/Src/main.c **** 	uint16_t filter[]={INDIVIDUAL_ID1,INDIVIDUAL_ID1+10,INDIVIDUAL_ID1+20,INDIVIDUAL_ID1+30};
+  57              		.loc 1 6 11
+  58 0006 154A     		ldr	r2, .L4
+  59 0008 3B46     		mov	r3, r7
+  60 000a 92E80300 		ldm	r2, {r0, r1}
+  61 000e 83E80300 		stm	r3, {r0, r1}
+   7:Core/Src/main.c **** 	uint32_t bootKey;
+   8:Core/Src/main.c **** 	RccClockInit();
+  62              		.loc 1 8 2
+  63 0012 FFF7FEFF 		bl	RccClockInit
+   9:Core/Src/main.c **** 	delayInit();
+  64              		.loc 1 9 2
+  65 0016 FFF7FEFF 		bl	delayInit
+  10:Core/Src/main.c **** 	bootKey = flashRead(BOOT_KEY_ADR);//Считыввание boot ключа
+  66              		.loc 1 10 12
+  67 001a 1148     		ldr	r0, .L4+4
+  68 001c FFF7FEFF 		bl	flashRead
+  69 0020 0346     		mov	r3, r0
+  70              		.loc 1 10 10
+  71 0022 FB60     		str	r3, [r7, #12]
+  11:Core/Src/main.c **** 	if(bootKey!=BOOT_KEY && flashRead(PROGRAMM_START_ADR)!=0xFFFFFFFF)//Проверка boot ключ
+  72              		.loc 1 11 4
+  73 0024 FB68     		ldr	r3, [r7, #12]
+  74 0026 0F4A     		ldr	r2, .L4+8
+  75 0028 9342     		cmp	r3, r2
+  76 002a 08D0     		beq	.L2
+  77              		.loc 1 11 26 discriminator 1
+  78 002c 0E48     		ldr	r0, .L4+12
+  79 002e FFF7FEFF 		bl	flashRead
+  80 0032 0346     		mov	r3, r0
+  81              		.loc 1 11 23 discriminator 1
+  82 0034 B3F1FF3F 		cmp	r3, #-1
+  83 0038 01D0     		beq	.L2
+  12:Core/Src/main.c **** 	{
+  13:Core/Src/main.c **** 		jumpToMainApp();
+  84              		.loc 1 13 3
+  85 003a FFF7FEFF 		bl	jumpToMainApp
+  86              	.L2:
+  14:Core/Src/main.c **** 	}
+  15:Core/Src/main.c **** 	canInit(0x011c0008);
+  87              		.loc 1 15 2
+  88 003e 0B48     		ldr	r0, .L4+16
+  89 0040 FFF7FEFF 		bl	canInit
+  16:Core/Src/main.c **** 	canConfigReciveFIFO(1,0,ID,&filter);
+  90              		.loc 1 16 2
+  91 0044 3B46     		mov	r3, r7
+  92 0046 0022     		movs	r2, #0
+  93 0048 0021     		movs	r1, #0
+  94 004a 0120     		movs	r0, #1
+  95 004c FFF7FEFF 		bl	canConfigReciveFIFO
+  17:Core/Src/main.c **** 	uint32_t i=0;
+  96              		.loc 1 17 11
+  97 0050 0023     		movs	r3, #0
+  98 0052 BB60     		str	r3, [r7, #8]
+  99              	.L3:
+  18:Core/Src/main.c ****     while(1)
+ARM GAS  C:\Users\worker\AppData\Local\Temp\ccbv52No.s 			page 3
+
+
+  19:Core/Src/main.c ****     {
+  20:Core/Src/main.c **** 		bootProcess();
+ 100              		.loc 1 20 3 discriminator 1
+ 101 0054 FFF7FEFF 		bl	bootProcess
+ 102 0058 FCE7     		b	.L3
+ 103              	.L5:
+ 104 005a 00BF     		.align	2
+ 105              	.L4:
+ 106 005c 00000000 		.word	.LC0
+ 107 0060 F0FF0008 		.word	134283248
+ 108 0064 368B1D86 		.word	-2044884170
+ 109 0068 00240008 		.word	134226944
+ 110 006c 08001C01 		.word	18612232
+ 111              		.cfi_endproc
+ 112              	.LFE126:
+ 114              		.text
+ 115              	.Letext0:
+ 116              		.file 2 "c:\\work\\arm\\xpack-arm-none-eabi-gcc-9.2.1-1.1\\arm-none-eabi\\include\\machine\\_defau
+ 117              		.file 3 "c:\\work\\arm\\xpack-arm-none-eabi-gcc-9.2.1-1.1\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 118              		.file 4 "Drivers/CMSIS/Include/core_cm4.h"
+ 119              		.file 5 "Drivers/CMSIS/Device/ST/STM32F3xx/Include/system_stm32f3xx.h"
+ 120              		.file 6 "c:\\work\\arm\\xpack-arm-none-eabi-gcc-9.2.1-1.1\\arm-none-eabi\\include\\sys\\lock.h"
+ 121              		.file 7 "c:\\work\\arm\\xpack-arm-none-eabi-gcc-9.2.1-1.1\\arm-none-eabi\\include\\sys\\_types.h"
+ 122              		.file 8 "c:\\work\\arm\\xpack-arm-none-eabi-gcc-9.2.1-1.1\\lib\\gcc\\arm-none-eabi\\9.2.1\\include
+ 123              		.file 9 "c:\\work\\arm\\xpack-arm-none-eabi-gcc-9.2.1-1.1\\arm-none-eabi\\include\\sys\\reent.h"
+ 124              		.file 10 "c:\\work\\arm\\xpack-arm-none-eabi-gcc-9.2.1-1.1\\arm-none-eabi\\include\\stdlib.h"
+ 125              		.file 11 "Core/Inc/rcc.h"
+ 126              		.file 12 "Core/Inc/can.h"
+ARM GAS  C:\Users\worker\AppData\Local\Temp\ccbv52No.s 			page 4
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 main.c
+C:\Users\worker\AppData\Local\Temp\ccbv52No.s:18     .bss.TimingDelay:0000000000000000 $d
+C:\Users\worker\AppData\Local\Temp\ccbv52No.s:21     .bss.TimingDelay:0000000000000000 TimingDelay
+C:\Users\worker\AppData\Local\Temp\ccbv52No.s:24     .rodata:0000000000000000 $d
+C:\Users\worker\AppData\Local\Temp\ccbv52No.s:31     .text.main:0000000000000000 $t
+C:\Users\worker\AppData\Local\Temp\ccbv52No.s:39     .text.main:0000000000000000 main
+C:\Users\worker\AppData\Local\Temp\ccbv52No.s:106    .text.main:000000000000005c $d
+
+UNDEFINED SYMBOLS
+RccClockInit
+delayInit
+flashRead
+jumpToMainApp
+canInit
+canConfigReciveFIFO
+bootProcess
