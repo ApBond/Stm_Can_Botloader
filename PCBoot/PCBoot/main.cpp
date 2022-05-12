@@ -7,14 +7,6 @@
 #include "firmware.h"
 #include "bootloader.h"
 
-
-inline void printLog(std::string data)
-{
-    std::cout << data << std::endl;
-}
-
-CanBus * can;
-
 int main(int argc, char *argv[])
 {
     if(argc==4)
